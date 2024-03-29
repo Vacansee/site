@@ -48,11 +48,13 @@ import Slider from '@vueform/slider'
         </Teleport>
     </div>
 
-    <!-- <div id="bot-right-nav">
-        <Button class="nav-btn" @click="getLocation">
-            <img src="./assets/icons/location.svg" height="30" width="30"/>
-        </Button>
-      </div> -->
+    <!-- <body> -->
+        <div class="container">
+          <input type="range" class="mySlider" min="0" max="100">
+          <span class="rangeValue"></span>
+
+        </div>
+    <!-- </body> -->
 
 
   <RouterView />
@@ -219,6 +221,19 @@ header {
   position: absolute;
   bottom: 2vh;
   z-index: 6;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  background-color: #2b2b2b;
+}
+
+.container{
+  position: relative;
+  height: 200px;
+  width: 600px;
+  margin: 200px auto;
 }
 
 /* #bot-right-nav {
