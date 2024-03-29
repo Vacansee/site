@@ -265,7 +265,9 @@ export default {
   // General local variables
   data() {
     return {
+      threshold: 1,
       doResize: "",
+      zoom: 0
           }
   },
   updated() {
@@ -285,7 +287,7 @@ export default {
     // Check for resizing of window
     window.addEventListener("resize", this.windowResizeTimeout)
     // Allow for the scroll wheel to zoom the map
-    window.addEventListener("wheel", this.onMouseScroll);
+  //  window.addEventListener("wheel", this.onMouseScroll);
     // Handles changes to the window
     this.windowEventHandler()
     window.addEventListener("mousedown", () => {
@@ -295,7 +297,50 @@ export default {
       window.removeEventListener("mousemove", this.onMouseDrag);
     });
   },
-  methods: 
+  methods: {
+    onMouseScroll({deltaX,deltaY}) {
+      if (!this.global.sFocus && !this.global.bldg){
+        let dirwheel = 0;
+        if (deltaY>0) {
+          dirwheel = -1;
+        } else if (deltaY<0) {
+          dirwheel = 1;
+        }
+
+        let x = window.innerWidth;
+        let y = window.innerHeight;
+        let ratio = x / y;
+        let portraitMode = false;
+        if (ratio < this.threshold) {
+          portraitMode = true;
+        }
+        let tempZoom=0;
+        if (portraitMode) {
+          tempZoom = y/50+this.zoom+dirwheel*10;
+        } else {
+          tempZoom = x/50+this.zoom+dirwheel*10;
+        }
+        
+        
+        this.zoom +=dirwheel*10;
+        if (dirwheel == -1 && this.zoom <= 40) this.zoom  = 37.5 - (40 - this.zoom)*0.75;
+        if (dirwheel == 1 && this.zoom >= 60) this.zoom  = 62.5 + (this.zoom - 60)*0.75;
+        // console.log(dirwheel, this.zoom)
+        this.windowEventHandler();
+      }
+    },
+    onMouseDrag({movementX, movementY}) {
+      // if (!this.global.bldg) {
+      //   // let mouseerr = 0.0;
+      //   // let x = (-mouseerr<movementX&&movementX<mouseerr)?0:movementX;
+      //   // let y = (-mouseerr<movementY&&movementY<mouseerr)?0:movementY;
+      //   let changeX = (movementX*100*(this.zoom+100)/100);
+      //   let changeY = (movementY*100*(this.zoom+100)/100);
+
+      //   mapBox.style.left = mapBox.offsetLeft + changeX + "px"; 
+      //   mapBox.style.top = mapBox.offsetTop + changeY + "px";
+      // }
+    },
     // Applys the color of the building based on availability
     applyBuildingColors() {
       let colors = [

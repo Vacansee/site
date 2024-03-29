@@ -46,7 +46,7 @@ export default {
       curMoveY: 0,
       maxX: 750,
       maxY: 300,
-      zoom: 0,
+      zoom: 40,
       threshold: 1,
     }
   },
@@ -103,8 +103,6 @@ export default {
       o.addEventListener("click", () => {
         this.$showToast({type: 'info', title: 'Unavailable', body: "This isn\'t a public facility", lasts: 2000}) })
     }
-    // Allow for the scroll wheel to zoom the map
-    window.addEventListener("wheel", this.onMouseScroll);
 
     // If landscape mode
     // Fixes issue where transitions when unselected would show the popup for a split second
@@ -115,6 +113,8 @@ export default {
     } else if (!this.bldgSVG){
       popup.style.transform = "TranslateY(50vh)"
     }
+    // Allow for the scroll wheel to zoom the map
+    window.addEventListener("wheel", this.onMouseScroll);
   },
   methods: {
     runFind() {
@@ -145,8 +145,8 @@ export default {
         var xPos = -1.5*window.innerWidth/100 - this.totalDisplacementX
         var yPos = -4.95*window.innerHeight/100 - this.totalDisplacementY
         mapBox.style.transition = "800ms ease all"
-        mapBox.style.transform = `scale(1) translate(${xPos}px, ${yPos}px)`
-    }
+        mapBox.style.transform = `scale(${1*this.zoom/40}) translate(${xPos}px, ${yPos}px)`
+      }
     },
     moveScreen(c) {
       if (!this.buildingSelected && this.clicked) {
@@ -166,7 +166,38 @@ export default {
           var yPos = -4.95*window.innerHeight/100 + (this.maxY + pushbackScale*Math.sqrt(-this.totalDisplacementY - this.curMoveY-this.maxY))
         }
         mapBox.style.transition = "0ms ease all"
-        mapBox.style.transform = `scale(1) translate(${xPos}px, ${yPos}px)`
+        mapBox.style.transform = `scale(${1*this.zoom/40}) translate(${xPos}px, ${yPos}px)`
+      }
+    },
+    onMouseScroll({deltaX,deltaY}) {
+      if (!this.global.sFocus && !this.global.bldg){
+        let dirwheel = 0;
+        if (deltaY>0) {
+          dirwheel = -1;
+        } else if (deltaY<0) {
+          dirwheel = 1;
+        }
+
+        let x = window.innerWidth;
+        let y = window.innerHeight;
+        let ratio = x / y;
+        let portraitMode = false;
+        if (ratio < this.threshold) {
+          portraitMode = true;
+        }
+        let tempZoom=0;
+        if (portraitMode) {
+          tempZoom = y/50+this.zoom+dirwheel*10;
+        } else {
+          tempZoom = x/50+this.zoom+dirwheel*10;
+        }
+        
+        
+        this.zoom +=dirwheel*10;
+        if (dirwheel == -1 && this.zoom <= 40) this.zoom  = 37.5 - Math.sqrt((40 - this.zoom)*0.75);
+        if (dirwheel == 1 && this.zoom >= 60) this.zoom  = 62.5 + Math.sqrt(this.zoom - 60)*0.75;
+        console.log(dirwheel, this.zoom)
+        this.moveInBounds();
       }
     },
     getInitMouse() {
@@ -233,10 +264,6 @@ export default {
         mask.style.opacity = 0.65
         mask.style.pointerEvents = "inherit"
         mapBox.style.transition = "800ms ease all"
-        console.log(window.innerWidth / 2 - boxCenterX + this.totalDisplacementX);
-        console.log(window.innerHeight / 2 - boxCenterY - 50);
-        console.log(boxCenterX, boxCenterY);
-        console.log(this.totalDisplacementX, this.totalDisplacementY)
 
         mapBox.style.transform = `scale(3) translate(${window.innerWidth / 2 - boxCenterX}px, ${window.innerHeight / 2 - boxCenterY - 50}px)`
         // Bring the popup to 0,0
@@ -264,42 +291,7 @@ export default {
           popup.style.transform = "TranslateY(50vh)"
         }
       } catch { /* pass */ }
-    },
-    onMouseScroll({deltaX,deltaY}) {
-      this.nameTagDisappear();
-      if (!this.global.sFocus && !this.global.bldg){
-        let dirwheel = 0;
-        if (deltaY>0) {
-          dirwheel = -1;
-        } else if (deltaY<0) {
-          dirwheel = 1;
-        }
-
-        let x = window.innerWidth;
-        let y = window.innerHeight;
-        let ratio = x / y;
-        let portraitMode = false;
-        if (ratio < this.threshold) {
-          portraitMode = true;
-        }
-        let tempZoom=0;
-        if (portraitMode) {
-          tempZoom = y/50+this.zoom+dirwheel*10;
-        } else {
-          tempZoom = x/50+this.zoom+dirwheel*10;
-        }
-        
-        
-        this.zoom +=dirwheel*10;
-        if (dirwheel == -1 && this.zoom <= 40) this.zoom  = 37.5 - (40 - this.zoom)*0.75;
-        if (dirwheel == 1 && this.zoom >= 60) this.zoom  = 62.5 + (this.zoom - 60)*0.75;
-      if (ratio < this.threshold) { // portrait mode
-        mapBox.style.transform = `scale(${1*this.zoom})` + `rotate(90deg)`
-      }
-      else // landscape mode
-        mapBox.style.transform = `scale(${1*this.zoom})`
-      }
-    },
+    }
   }
 }
 </script>
