@@ -18,7 +18,9 @@ import Tag from 'primevue/tag';
                     <!-- <img :src="`../../assets/photos/${global.bldg}.jpg`" id="photo"> -->
                     <span>{{ getBldg().meta.name }}</span>
                 </div>
-                <p id="busy"><b>{{ interpretHeat() }}</b> ({{ getBldg().meta.heat }}%)</p>
+                <p id="heat" v-if="interpretHeat()"><b style="color:var(--heatColor);">{{ interpretHeat() }}</b> (~{{ Math.trunc(getBldg().meta.heat.toFixed(2)*100) }}%)</p>
+                <p id="heat" v-else><b>N/A</b></p>
+                <p id="flow" v-if="interpretFlow()">+ {{ interpretFlow() }} (~{{ Math.trunc(getBldg().meta.flow.toFixed(2)*100) }}%)&emsp;</p>
                 <p id="time" ref="mySpan">{{ getRealTime(global.time) }}</p>
                 <span v-if="getHist()"> 
                     <img src="../../assets/icons/info.svg" height="20" width="20" />
