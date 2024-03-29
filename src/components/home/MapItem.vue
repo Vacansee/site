@@ -1,5 +1,6 @@
 <script setup>
 import tinycolor from "tinycolor2";
+// import {router_info} from "@/router";
 </script>
 <template>
   <!-- data for every building -->
@@ -296,6 +297,12 @@ export default {
     window.addEventListener("mouseup", () => {
       window.removeEventListener("mousemove", this.onMouseDrag);
     });
+    // window.addEventListener('router_info.invalidLoad', () => {
+    //   console.log("Triggered")
+    //   // this.global.bldg = "";
+    //   // this.global.floor = null;
+    //   // this.global.room = "";
+    // });
   },
   methods: {
     onMouseScroll({deltaX,deltaY}) {

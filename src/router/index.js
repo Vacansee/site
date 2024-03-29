@@ -67,18 +67,18 @@ router.beforeResolve((to, from, next) => {
   next();
 });
 
-router.afterEach((to, from) => {
-  console.log("afterEach()")
-  const globalState = inject('global');
-  console.log(globalState.bldg)
-  if (router_info.invalidLoad) {
-    console.log("invalid load change")
-    globalState.bldg = ""
-    globalState.floor = null
-    globalState.room = ""
-    router_info.invalidLoad = false
-  }
-})
+// router.afterEach((to, from) => {
+//   // console.log("afterEach()")
+//   // const globalState = inject('global');
+//   // console.log(globalState.bldg)
+//   // if (router_info.invalidLoad) {
+//   //   console.log("invalid load change")
+//   //   globalState.bldg = ""
+//   //   globalState.floor = null
+//   //   globalState.room = ""
+//   //   router_info.invalidLoad = false
+//   // }
+// })
 
 // Sets global variables to user inputted URL path values
 export function Routing(mainGlobal) {
