@@ -230,7 +230,9 @@ body{
 }
 
 .container{
-  position: relative;
+  position: absolute;
+  top: 100;
+  right: 500;
   height: 200px;
   width: 600px;
   margin: 200px auto;
