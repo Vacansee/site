@@ -2,11 +2,13 @@
 // Basic Imports
 import { RouterLink, RouterView } from 'vue-router'
 import Logo from '@/assets/logo.svg?component'
+import DiningIcon from '@/assets/icons/dining.svg?component'
 import PollIcon from '@/assets/icons/poll.svg?component'
 import GHIcon from '@/assets/icons/github.svg?component'
 import AutoComplete from 'primevue/autocomplete'
 import Button from "primevue/button"
 import Toast from 'primevue/toast'
+import DiningSurveyLightbox from './DiningSurveyLightbox.vue'
 </script>
 
 <template>
@@ -19,6 +21,9 @@ import Toast from 'primevue/toast'
       </div>
 
       <div id="right-nav">
+        <a href="#" @click.prevent="openDiningSurvey"><Button class="nav-btn" aria-label="Dining" >
+            <DiningIcon height="25" width="25"/>
+        </Button></a>
         <a href="https://forms.gle/Tu5xSSjK1MkZDXK69" target="_blank" rel="noopener noreferrer"><Button class="nav-btn" aria-label="Feedback" >
             <PollIcon height="25" width="25"/>
         </Button></a>
@@ -34,6 +39,11 @@ import Toast from 'primevue/toast'
     </div>
 
   <RouterView />
+  
+  <DiningSurveyLightbox ref="diningSurveyLightbox">
+    <!-- Your survey form will go here -->
+  </DiningSurveyLightbox>
+
 </template>
 
 <script>
@@ -69,6 +79,10 @@ export default {
     setInterval(this.changeEx, 5000);
   },
   methods: {
+    openDiningSurvey() {
+      this.$refs.diningSurveyLightbox.open();
+    },
+
     changeEx() {
       const ex = this.exs.shift()
       this.ex = `Try ${ex}`; this.exs.push(ex)
