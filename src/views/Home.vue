@@ -121,14 +121,8 @@ export default {
       console.clear()
       let count = 0 
       for (const b of buildings.children) {
-        console.log(b.id)
         count++
       }
-      console.log(count)
-
-      // for (const o of other.children) {
-      //   if (!(o.id in this.global.data)) console.log(o.id)
-      // }
     },
     moveInBounds() {
       if (!this.buildingSelected) {
@@ -170,6 +164,7 @@ export default {
       }
     },
     onMouseScroll({deltaX,deltaY}) {
+      // If you arent selected on a building
       if (!this.global.sFocus && !this.global.bldg){
         let dirwheel = 0;
         if (deltaY>0) {
@@ -196,7 +191,15 @@ export default {
         this.zoom +=dirwheel*10;
         if (dirwheel == -1 && this.zoom <= 40) this.zoom  = 37.5 - Math.sqrt((40 - this.zoom)*0.75);
         if (dirwheel == 1 && this.zoom >= 60) this.zoom  = 62.5 + Math.sqrt(this.zoom - 60)*0.75;
-        console.log(dirwheel, this.zoom)
+        var adjustedX = this.mouseX - window.innerWidth/2;
+        var adjustedY = this.mouseY - window.innerHeight/2;
+        if (dirwheel == -1) {
+          this.totalDisplacementX -= adjustedX / this.zoom * 0.5;
+          this.totalDisplacementY -= adjustedY / this.zoom * 0.5;
+        } else {
+          this.totalDisplacementX += adjustedX / this.zoom * 0.5;
+          this.totalDisplacementY += adjustedY / this.zoom * 0.5;
+        }
         this.moveInBounds();
       }
     },
