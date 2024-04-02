@@ -14,6 +14,15 @@ import Slider from '@vueform/slider'
   <Toast/>
   <!-- HTML For Header -->
   <header id="header">
+
+    <!-- <body> -->
+      <div class="rangeslider">
+        <input type="range" min="1" max="100" value="10"
+                class="myslider" id="sliderRange">
+      </div>
+
+  <!-- </body> -->
+
       <div id="left-nav">
         <RouterLink to="/"> <Logo class="logo" height="75" width="75"/>
         </RouterLink>
@@ -50,13 +59,7 @@ import Slider from '@vueform/slider'
         </Teleport>
     </div>
 
-    <!-- <body> -->
-      <div class="rangeslider">
-        <input type="range" min="1" max="100" value="10"
-                class="myslider" id="sliderRange">
-      </div>
-
-  <!-- </body> -->
+    
 
 
 
@@ -66,13 +69,13 @@ import Slider from '@vueform/slider'
 <script>
 
 //Added to try to display the value in the slider but not showing up for some reason
-var rangeslider = document.getElementById("sliderRange");
-var output = document.getElementById("demo");
-output.innerHTML = rangeslider.value;
+// var rangeslider = document.getElementById("sliderRange");
+// var output = document.getElementById("demo");
+// output.innerHTML = rangeslider.value;
 
-rangeslider.oninput = function() {
-  output.innerHTML = this.value;
-}
+// rangeslider.oninput = function() {
+//   output.innerHTML = this.value;
+// }
 
 export default {
   data() {
@@ -239,12 +242,14 @@ header {
 }
 
 .rangeslider{
-  transform: translateY(850px);
+  /*transform: translateY(100px), translateX(500px);*/
+
   width: 50%;
+  z-index: 1000;
 }
 
 .myslider {
-  -webkit-appearance: none;
+  appearance: none;
   background: #FCF3CF  ;
   width: 50%;
   height: 20px;
@@ -256,7 +261,7 @@ header {
 }
 
 .myslider::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  appearance: none;
   cursor: pointer;
   background: #34495E  ;
   width: 5%;
