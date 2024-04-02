@@ -30,7 +30,7 @@ import Slider from '@vueform/slider'
 
       </div>
 
-      <div id="bot-right-nav">
+      <!-- <div id="bot-right-nav">
         <a href="https://forms.gle/Tu5xSSjK1MkZDXK69" target="_blank" rel="noopener noreferrer"><Button class="nav-btn" aria-label="Feedback" >
             <PollIcon height="25" width="25"/>
         </Button></a>
@@ -38,8 +38,10 @@ import Slider from '@vueform/slider'
         <a href="https://github.com/Vacansee/app" target="_blank" rel="noopener noreferrer"><Button class="nav-btn" aria-label="GitHub" >
             <GHIcon height="25" width="25"/>
         </Button></a>
-        
-      </div>
+
+      </div> -->
+
+
 
     </header>
     <div id="mobile-nav">
@@ -49,18 +51,29 @@ import Slider from '@vueform/slider'
     </div>
 
     <!-- <body> -->
-        <div class="container">
-          <input type="range" class="mySlider" min="0" max="100">
-          <span class="rangeValue"></span>
+      <div class="rangeslider">
+        <input type="range" min="1" max="100" value="10"
+                class="myslider" id="sliderRange">
+      </div>
 
-        </div>
-    <!-- </body> -->
+  <!-- </body> -->
+
 
 
   <RouterView />
 </template>
 
 <script>
+
+//Added to try to display the value in the slider but not showing up for some reason
+var rangeslider = document.getElementById("sliderRange");
+var output = document.getElementById("demo");
+output.innerHTML = rangeslider.value;
+
+rangeslider.oninput = function() {
+  output.innerHTML = this.value;
+}
+
 export default {
   data() {
     return {
@@ -146,6 +159,8 @@ export default {
     }
   }
 }
+
+
 </script>
 
 
@@ -223,19 +238,29 @@ header {
   z-index: 6;
 }
 
-body{
-  margin: 0;
-  padding: 0;
-  background-color: #2b2b2b;
+.rangeslider{
+  transform: translateY(850px);
+  width: 50%;
 }
 
-.container{
-  position: absolute;
-  top: 100;
-  right: 500;
-  height: 200px;
-  width: 600px;
-  margin: 200px auto;
+.myslider {
+  -webkit-appearance: none;
+  background: #FCF3CF  ;
+  width: 50%;
+  height: 20px;
+  opacity: 2;
+}
+
+.myslider:hover {
+  opacity: 1;
+}
+
+.myslider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  cursor: pointer;
+  background: #34495E  ;
+  width: 5%;
+  height: 20px;
 }
 
 /* #bot-right-nav {
