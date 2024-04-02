@@ -59,6 +59,8 @@ router.beforeResolve((to, from, next) => {
       router_info.pathBuilding = pathComponents[0]
       if (pathComponents[1] <= 7) {
         router_info.pathFloor = Number(pathComponents[1])
+        if (router_info.pathFloor < 0) router_info.pathFloor = 1
+        router_info.pathFloor = Math.floor(router_info.pathFloor)
       } else {
         router_info.pathRoom = pathComponents[1]
       }
@@ -67,18 +69,31 @@ router.beforeResolve((to, from, next) => {
   next();
 });
 
+// Function to check URL path?
 // router.afterEach((to, from) => {
-//   // console.log("afterEach()")
-//   // const globalState = inject('global');
-//   // console.log(globalState.bldg)
-//   // if (router_info.invalidLoad) {
-//   //   console.log("invalid load change")
-//   //   globalState.bldg = ""
-//   //   globalState.floor = null
-//   //   globalState.room = ""
-//   //   router_info.invalidLoad = false
-//   // }
+//   router_info.afterEachCount += 1
+//   if (router_info.afterEachCount === 2) {
+//     console.log("afterEach()")
+//     const globalState = inject('global');
+//     console.log(globalState.bldg)
+//     if (router_info.invalidLoad) {
+//       console.log("invalid load change")
+//       globalState.bldg = ""
+//       globalState.floor = null
+//       globalState.room = ""
+//       router_info.invalidLoad = false
+//       router.push({name: 'home'})
+//       console.log(globalState.bldg)
+//     }
+//   }
 // })
+
+router.afterEach((to, from) => {
+  const globalState = inject('global');
+  if (globalState.bldg !== router_info.pathBuilding) {
+    console.log("change")
+  }
+})
 
 // Sets global variables to user inputted URL path values
 export function Routing(mainGlobal) {
