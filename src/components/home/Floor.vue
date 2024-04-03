@@ -120,7 +120,8 @@ export default {
           let roomID = path.getAttribute("id");
           let roomName = roomID.substr(1);
           let roomInfo = this.getBldg()[roomName];
-          
+          console.log(roomInfo);
+
           if (roomID == 'floor') {
               path.style.stroke = tinycolor.mix(this.getColorVal("buildbord"), floorColor, 40).toString();
               let fill = tinycolor.mix(this.getColorVal("roomfill"), floorColor, 30).lighten(8).toString();
