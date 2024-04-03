@@ -91,47 +91,69 @@ export default {
     }
   },
   methods: {
-    getLocation() {
-      navigator.geolocation.getCurrentPosition(this.locationObtained)
-    },
     locationError(err) {
       this.$showToast({title: 'Failed to get location', body: err.message})
     },
-    lat2y(lat) { return Math.log(Math.tan(this.PI/4 + lat * this.DEG2RAD / 2)) * this.R},
-    lon2x(lon) { return lon * this.DEG2RAD * this.R; },
+    getLocation() {
+      /**
+       * Gets the location of the current device
+       * First param runs if the it successfully got location
+       * Second param runs if it didn't get location
+       * last param is for options
+       */
+      navigator.geolocation.getCurrentPosition(this.locationObtained, this.locationError)
+    },
+
+    // currently not working correctly 
+    latituteToY(lat) { return Math.log(Math.tan(this.PI/4 + lat * this.DEG2RAD / 2)) * this.R},
+    longituteToX(lon) { return lon * this.DEG2RAD * this.R; },
+
+    locationCheck(x,y,accuracy) {
+      if(x < 0 || x > 1100 || y < 0 || y > 1300) {
+        this.$showToast({title: 'Location is too far away from map'})
+        return;
+      }
+      if (accuracy > 50)  {
+        this.$showToast({title: 'Location is too inaccurate to locate user', body: 'The accuracy is off by ' + accuracy.toFixed(2) + ' meters. Try checking your wifi connection.'})
+        return
+      }
+    },
+    
     locationObtained(pos) {
-      const crd = pos.coords;
-      // if (crd.accuracy > 50)  {
-      //   this.$showToast({title: 'Location is too inaccurate to locate user', body: 'The accuracy is off by +/- ' + crd.accuracy + ' meters. Try checking your wifi connection.'})
-      //   return
-      // }
+
+      
+
+      // // old code from Matt Sweet (lead fall 23)
       /*
         https://math.stackexchange.com/questions/3968248/how-do-i-find-the-x-and-y-position-given-a-latitude-and-longitude-coordinate
       */
-      const eigthAndSageCoords = [42.733139437397675 * this.DEG2RAD, -73.68350452317202 * this.DEG2RAD, 65, 478]
-      const burdettAndTibbitsCoords = [42.724868915490866 * this.DEG2RAD, -73.67381709414943 * this.DEG2RAD, 970, 1205]
-      const _0_H_coords = [42.726440 * this.DEG2RAD, -73.685017 * this.DEG2RAD]
-      const W_0_coords = [42.73163480043761 * this.DEG2RAD, -73.6721845516856 * this.DEG2RAD]
 
-      const DCCLocation = [42.72939854575586 * this.DEG2RAD, -73.67956579999999 * this.DEG2RAD]
-
-      const C_0_0 = [Math.cos(eigthAndSageCoords[0]) * Math.cos(eigthAndSageCoords[1]), Math.cos(eigthAndSageCoords[0]) * Math.sin(eigthAndSageCoords[1])]
-      const C_W_0 = [Math.cos(W_0_coords[0]) * Math.cos(W_0_coords[1]), Math.cos(W_0_coords[0]) * Math.sin(W_0_coords[1])]
-      const C_0_H = [Math.cos(_0_H_coords[0]) * Math.cos(_0_H_coords[1]), Math.cos(_0_H_coords[0]) * Math.sin(_0_H_coords[1])]
-      const U_xy = [Math.cos(DCCLocation[0]) * Math.cos(DCCLocation[1]), Math.cos(DCCLocation[0]) * Math.sin(DCCLocation[1])]
-
-      const U = C_0_H.map(function(item, index) { return item - C_0_0[index] })
-      const V = C_W_0.map(function(item, index) { return item - C_0_0[index] })
-      const W = U_xy.map(function(item, index) { return item - C_0_0[index] })
-
-      const D = ((U[0] * V[1]) - (V[0] * U[1]))
-      const D_x = ((W[0] * V[1]) - (V[0] * W[1]))
-      const D_y = ((U[0] * W[1]) - (W[0] * U[1]))
+      // hardcoded positions
+      // const eigthAndSageCoords = [42.733139437397675 * this.DEG2RAD, -73.68350452317202 * this.DEG2RAD, 65, 478]
+      // const burdettAndTibbitsCoords = [42.724868915490866 * this.DEG2RAD, -73.67381709414943 * this.DEG2RAD, 970, 1205]
       
-      const svgX = ((burdettAndTibbitsCoords[2] - eigthAndSageCoords[2]) * (D_x / D)) + eigthAndSageCoords[2]
-      const svgY = ((burdettAndTibbitsCoords[3] - eigthAndSageCoords[3]) * (D_y / D)) + eigthAndSageCoords[3]
-      const westLocation = [42.73178763583408, -73.68341264293338]
-      const commonsLocation = [42.728455878577684, -73.67448701676955]
+      // const _0_H_coords = [42.726440 * this.DEG2RAD, -73.685017 * this.DEG2RAD]
+      // const W_0_coords = [42.73163480043761 * this.DEG2RAD, -73.6721845516856 * this.DEG2RAD]
+
+      // const DCCLocation = [42.72939854575586 * this.DEG2RAD, -73.67956579999999 * this.DEG2RAD]
+
+      // const C_0_0 = [Math.cos(eigthAndSageCoords[0]) * Math.cos(eigthAndSageCoords[1]), Math.cos(eigthAndSageCoords[0]) * Math.sin(eigthAndSageCoords[1])]
+      // const C_W_0 = [Math.cos(W_0_coords[0]) * Math.cos(W_0_coords[1]), Math.cos(W_0_coords[0]) * Math.sin(W_0_coords[1])]
+      // const C_0_H = [Math.cos(_0_H_coords[0]) * Math.cos(_0_H_coords[1]), Math.cos(_0_H_coords[0]) * Math.sin(_0_H_coords[1])]
+      // const U_xy = [Math.cos(DCCLocation[0]) * Math.cos(DCCLocation[1]), Math.cos(DCCLocation[0]) * Math.sin(DCCLocation[1])]
+
+      // const U = C_0_H.map(function(item, index) { return item - C_0_0[index] })
+      // const V = C_W_0.map(function(item, index) { return item - C_0_0[index] })
+      // const W = U_xy.map(function(item, index) { return item - C_0_0[index] })
+
+      // const D = ((U[0] * V[1]) - (V[0] * U[1]))
+      // const D_x = ((W[0] * V[1]) - (V[0] * W[1]))
+      // const D_y = ((U[0] * W[1]) - (W[0] * U[1]))
+      
+      // const svgX = ((burdettAndTibbitsCoords[2] - eigthAndSageCoords[2]) * (D_x / D)) + eigthAndSageCoords[2]
+      // const svgY = ((burdettAndTibbitsCoords[3] - eigthAndSageCoords[3]) * (D_y / D)) + eigthAndSageCoords[3]
+      // const westLocation = [42.73178763583408, -73.68341264293338]
+      // const commonsLocation = [42.728455878577684, -73.67448701676955]
 
 
       // console.log('here')
@@ -144,26 +166,30 @@ export default {
 
       // const svgX = (this.lon2x(burdettAndTibbitsCoords[1]) - this.lon2x(DCCLocation[1])  ) * scaleX + eigthAndSageCoords[2]
       // const svgY = ( this.lat2y(DCCLocation[0]) - this.lat2y(burdettAndTibbitsCoords[0])) * scaleY + eigthAndSageCoords[3]
-      console.log(svgX + ' ' + svgY)
-      
-
-      
+      // console.log(svgX + ' ' + svgY)
       
       // const scaleY = (/*crd.latitude*/ DCCLocation[0] - burdettAndTibbitsCoords[0]) / (eigthAndSageCoords[0] - burdettAndTibbitsCoords[0])
       // const scaleX = (/*crd.longitude*/ DCCLocation[1] - burdettAndTibbitsCoords[1]) / (eigthAndSageCoords[1] - burdettAndTibbitsCoords[1])
       // const svgX = burdettAndTibbitsCoords[2] + scaleX * (eigthAndSageCoords[2] - burdettAndTibbitsCoords[2])
       // const svgY = burdettAndTibbitsCoords[3] + scaleY * (eigthAndSageCoords[3] - burdettAndTibbitsCoords[3])
-      if(svgX < 0 || svgX > 1100 || svgY < 0 || svgY > 1300) {
-        this.$showToast({title: 'Location is too far away from map'})
-        return;
-      }
-      this.global.userCoords = [svgX, svgY]
+
+
+      // wifi network to find location (an idea)
+
+      const crd = pos.coords;
+      const svgX = this.longituteToX(crd.longitude);
+      const svgY = this.latituteToY(crd.latitude);
+      
+      // this.global.userCoords = [svgX, svgY]
       // this.global.userCoords = [svgX2, svgY2]
-      // console.log("Your current position is:");
-      // console.log(`Latitude : ${crd.latitude}`);
-      // console.log(`Longitude: ${crd.longitude}`);
-      // console.log('svg coords: ' + svgX + ' '  + svgY)
-      // console.log(`More or less ${crd.accuracy} meters.`);
+      console.log("Your current position is:");
+      console.log(`Latitude : ${crd.latitude}`);
+      console.log(`Longitude: ${crd.longitude}`);
+      console.log('svg coords: ' + svgX + ' '  + svgY)
+      console.log(`More or less ${crd.accuracy} meters.`);
+      this.locationCheck(svgX,svgY,crd.accuracy);
+
+      this.global.userCoords = [svgX, svgY];
     }
   }
 }
