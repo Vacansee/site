@@ -8,21 +8,21 @@ import AutoComplete from 'primevue/autocomplete'
 import Button from "primevue/button"
 import Toast from 'primevue/toast'
 import Slider from '@vueform/slider'
+import Calendar from 'primevue/calendar';
 </script>
 
 <template>
   <Toast/>
   <!-- HTML For Header -->
   <header id="header">
-
     <!-- <body> -->
-      <div class="rangeslider">
-        <input type="range" min="1" max="100" value="10"
-                class="myslider" id="sliderRange">
-      </div>
 
   <!-- </body> -->
+      <div id = "time">
+        <Calendar v-model="datetime12h" showTime showIcon = "true" value="selectedDate" date-click="handleDateClick" />
+        <p> {{ selectedDate }}</p>
 
+      </div>
       <div id="left-nav">
         <RouterLink to="/"> <Logo class="logo" height="75" width="75"/>
         </RouterLink>
@@ -108,7 +108,19 @@ export default {
     this.changeEx()
     setInterval(this.changeEx, 5000);
   },
+  components: {
+    Calendar
+  },
+  data() {
+    return {
+      selectedDate: null, // Initially no date selected
+      timeFormat: '12h' // Set the time format to 12-hour
+    };
+  },
   methods: {
+    handleDateClick(date) {
+      this.selectedDate = date; // Update selectedDate when a date is clicked
+    },
     changeEx() {
       const ex = this.exs.shift()
       this.ex = `Try ${ex}`; this.exs.push(ex)
@@ -241,31 +253,11 @@ header {
   z-index: 6;
 }
 
-.rangeslider{
-  /*transform: translateY(100px), translateX(500px);*/
-
-  width: 50%;
-  z-index: 1000;
-}
-
-.myslider {
-  appearance: none;
-  background: #FCF3CF  ;
-  width: 50%;
-  height: 20px;
-  opacity: 2;
-}
-
-.myslider:hover {
-  opacity: 1;
-}
-
-.myslider::-webkit-slider-thumb {
-  appearance: none;
-  cursor: pointer;
-  background: #34495E  ;
-  width: 5%;
-  height: 20px;
+#time {
+  position: absolute;
+  z-index: 9999;
+  top: 103px; 
+  left: 108px
 }
 
 /* #bot-right-nav {
