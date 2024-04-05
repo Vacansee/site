@@ -3,7 +3,6 @@
 import moment from 'moment-timezone'
 import tinycolor from "tinycolor2";
 import router from '../../router';
-import {router_info} from "@/router";
 </script>
 
 <template>
@@ -56,10 +55,7 @@ export default {
         else {
           this.floorSVG = await getFloorSVG(floorName)
           router.push({ name: 'buildingAndFloor', params: { building: this.global.bldg, floor: this.global.floor } })
-          if (!this.floorSVG) {
-            router_info.invalidLoad = true
-            this.$showToast({title: 'Map not yet implemented!'})}
-        }
+          if (!this.floorSVG) {this.$showToast({title: 'Map not yet implemented!'})}}
       },
       immediate: true,
     },

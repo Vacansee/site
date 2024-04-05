@@ -10,6 +10,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import {reactive, inject} from "vue";
+import home from "@/views/Home.vue";
 // import About from '../views/About.vue' // currently unused, could be a settings page
 
 // URL path values
@@ -88,12 +89,14 @@ router.beforeResolve((to, from, next) => {
 //   }
 // })
 
-router.afterEach((to, from) => {
-  const globalState = inject('global');
-  if (globalState.bldg !== router_info.pathBuilding) {
-    console.log("change")
-  }
-})
+// router.afterEach((to, from) => {
+//   const globalState = inject('global');
+//   if (globalState.bldg !== router_info.pathBuilding) {
+//     console.log("change")
+//
+//   }
+//
+// })
 
 // Sets global variables to user inputted URL path values
 export function Routing(mainGlobal) {

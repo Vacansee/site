@@ -15,6 +15,8 @@ import Moment from 'moment-timezone'
 import './assets/main.css'
 // Import function for manually loading based on URL path
 import {Routing} from "@/router";
+// Import router to update URL
+import router from "./router";
 
 // Primevue resources
 import PrimeVue from 'primevue/config';
@@ -68,6 +70,23 @@ Promise.all([
 		checkActive()
 		global.firstCalc = true
 	  	Routing(global)
+	  	// console.log(global.room)
+	  	// console.log(global.bldg !== "" && global.data[global.bldg] === undefined)
+	  	if (global.bldg !== "") {
+	  		if (global.bldg !== "" && global.data[global.bldg] === undefined) {
+	  			global.bldg = ""
+	  			global.floor = null
+	  			global.room = ""
+	  			router.push({ name: 'home'})
+				// this.$showToast({title: 'Invalid URL entered'})
+			}
+	  		// console.log(global.data[global.bldg].hasOwnProperty(global.room))
+	  		else if (!global.data[global.bldg].hasOwnProperty(global.room)) {
+				global.room = ""
+
+	  		}
+		}
+
 	})
   .catch(error => { this.$showToast({title: 'Failed to load data', body: error}) })
 

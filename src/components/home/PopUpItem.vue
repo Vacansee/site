@@ -1,6 +1,7 @@
 <script setup>
 import moment from 'moment-timezone'
 import { average } from 'color.js'
+import router from '../../router';
 import Tag from 'primevue/tag';
 
 import InfoIcon from '@/assets/icons/info.svg?component'
@@ -151,6 +152,7 @@ export default {
         // Returns the current building
         getBldg() {
             let bldg = this.global.data[this.global.bldg]
+            // bldg ? bldg : router.push({ name: 'home' })
             return bldg ? bldg : console.warn(`No classes here!`)
         },
         noData() { return !this.getBldg().hasOwnProperty(this.global.room) },
