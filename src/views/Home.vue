@@ -128,24 +128,27 @@ export default {
       if (!this.buildingSelected) {
         if (this.totalDisplacementX > this.maxX) {
           this.totalDisplacementX = this.maxX
+          mapBox.style.transition = "800ms ease all"
         } else if (this.totalDisplacementX < -this.maxX) {
           this.totalDisplacementX = -this.maxX
+          mapBox.style.transition = "800ms ease all"
         }
         if (this.totalDisplacementY > this.maxY) {
           this.totalDisplacementY = this.maxY
+          mapBox.style.transition = "800ms ease all"
         } else if (this.totalDisplacementY < -this.maxY) {
           this.totalDisplacementY = -this.maxY
+          mapBox.style.transition = "800ms ease all"
         }
         var xPos = -1.5*window.innerWidth/100 - this.totalDisplacementX
         var yPos = -4.95*window.innerHeight/100 - this.totalDisplacementY
-        mapBox.style.transition = "800ms ease all"
         mapBox.style.transform = `scale(${1*this.zoom/40}) translate(${xPos}px, ${yPos}px)`
       }
     },
     moveScreen(c) {
       if (!this.buildingSelected && this.clicked) {
-        this.curMoveX =  this.initMouseX - this.mouseX 
-        this.curMoveY = this.initMouseY - this.mouseY
+        this.curMoveX =  (this.initMouseX - this.mouseX)/this.zoom*40
+        this.curMoveY = (this.initMouseY - this.mouseY)/this.zoom*40
         var xPos = -1.5*window.innerWidth/100 - (this.totalDisplacementX + this.curMoveX)
         var yPos = -4.95*window.innerHeight/100 - (this.totalDisplacementY + this.curMoveY)
         var pushbackScale = 10
@@ -180,26 +183,35 @@ export default {
         if (ratio < this.threshold) {
           portraitMode = true;
         }
+        var adjustedX = this.mouseX - window.innerWidth/2;
+        var adjustedY = this.mouseY - window.innerHeight/2;
         let tempZoom=0;
         if (portraitMode) {
           tempZoom = y/50+this.zoom+dirwheel*10;
         } else {
           tempZoom = x/50+this.zoom+dirwheel*10;
         }
-        
-        
         this.zoom +=dirwheel*10;
-        if (dirwheel == -1 && this.zoom <= 40) this.zoom  = 37.5 - Math.sqrt((40 - this.zoom)*0.75);
-        if (dirwheel == 1 && this.zoom >= 60) this.zoom  = 62.5 + Math.sqrt(this.zoom - 60)*0.75;
-        var adjustedX = this.mouseX - window.innerWidth/2;
-        var adjustedY = this.mouseY - window.innerHeight/2;
         if (dirwheel == -1) {
-          this.totalDisplacementX -= adjustedX / this.zoom * 0.5;
-          this.totalDisplacementY -= adjustedY / this.zoom * 0.5;
+          // Start slowing down zoom out
+          if (this.zoom <= 40) this.zoom -= this.zoom/40/40 
+          // LB
+          if (this.zoom <= 30) this.zoom = 30;
         } else {
-          this.totalDisplacementX += adjustedX / this.zoom * 0.5;
-          this.totalDisplacementY += adjustedY / this.zoom * 0.5;
+          // Start slowing down zoom in
+          if (this.zoom >= 60) this.zoom += 60/this.zoom/this.zoom 
+          // UB
+          if (this.zoom >= 75) this.zoom = 75;
         }
+        if (dirwheel == -1) {
+          this.totalDisplacementX -= adjustedX * (this.zoom-30)/75;
+          this.totalDisplacementY -= adjustedY * (this.zoom-30)/75;
+        }
+        if (dirwheel == 1) {
+          this.totalDisplacementX += adjustedX * (75-this.zoom)/75;
+          this.totalDisplacementY += adjustedY * (75-this.zoom)/75;
+        }
+        mapBox.style.transition = "250ms ease all"
         this.moveInBounds();
       }
     },
