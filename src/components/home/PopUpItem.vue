@@ -4,7 +4,9 @@ import { average } from 'color.js'
 import Tag from 'primevue/tag';
 
 import InfoIcon from '@/assets/icons/info.svg?component'
+
 </script>
+
 
 <template>
     <!-- HTML for the popup -->
@@ -22,12 +24,14 @@ import InfoIcon from '@/assets/icons/info.svg?component'
                     <img :src="imgPath" id="photo">
                     <span>{{ getBldg().meta.name }}</span>
                 </div>
-                <p id="heat" v-if="interpretHeat()"><b style="color:var(--heatColor);">{{ interpretHeat() }}</b> (~{{ getBldg().meta.heat.toFixed(2)*100 }}%)</p>
+                <p id="heat" v-if="interpretHeat()"><b style="color:var(--heatColor);">{{ interpretHeat() }}</b> (~{{
+                getBldg().meta.heat.toFixed(2) * 100 }}%)</p>
                 <p id="heat" v-else><b>N/A</b></p>
-                <p id="flow" v-if="interpretFlow()">+ {{ interpretFlow() }} (~{{ getBldg().meta.flow.toFixed(2)*100 }}%)&emsp;</p>
+                <p id="flow" v-if="interpretFlow()">+ {{ interpretFlow() }} (~{{ getBldg().meta.flow.toFixed(2) * 100
+                    }}%)&emsp;</p>
                 <p id="time" ref="mySpan">{{ getRealTime(global.time) }}</p>
-                <span v-if="getHist()"> 
-                    <InfoIcon class="info"/>
+                <span v-if="getHist()">
+                    <InfoIcon class="info" />
                     <a :href="'https://archives.rpi.edu/institute-history/building-histories/' + getHist()">
                         <em> Get historical info&emsp;</em>
                     </a>
@@ -36,7 +40,7 @@ import InfoIcon from '@/assets/icons/info.svg?component'
             </div>
             <div v-if="getDining()" class="block"> <!-- Block: dining -->
                 <b>Dining&emsp;</b>
-                <InfoIcon class="info"/>
+                <InfoIcon class="info" />
                 <a :href="'https://rpi.sodexomyway.com/dining-near-me/' + getDining().url">
                     <em> More info</em>
                 </a>
@@ -53,53 +57,58 @@ import InfoIcon from '@/assets/icons/info.svg?component'
                     <p v-if="getRoom().meta.cur"><b>{{ getRoom().meta.cur[0] }}</b> ends in
                         <b>{{ getCur().hours() }}h</b> and
                         <b>{{ getCur().minutes() }}m</b>
-                        <span v-if="getSecs('cur')>0"> for section{{(getSecs('cur') > 1) ? 's ':' '}}</span>
+                        <span v-if="getSecs('cur') > 0"> for section{{ (getSecs('cur') > 1) ? 's ' : ' ' }}</span>
                         <span v-for="item in getRoom().meta.cur[1]" class="sec">{{ item }}</span>
                     </p>
                     <p v-else>No class in session</p>
                     <p v-if="getRoom().meta.next">Next class (<b>{{ getRoom().meta.next[0] }}</b>) starts in
                         <b>{{ getNext().hours() }}h</b> and
                         <b>{{ getNext().minutes() }}m</b>
-                        <span v-if="getSecs('next')>0"> for section{{(getSecs('next') > 1) ? 's ':' '}}</span>
+                        <span v-if="getSecs('next') > 0"> for section{{ (getSecs('next') > 1) ? 's ' : ' ' }}</span>
                         <span v-for="item in getRoom().meta.next[1]" class="sec">{{ item }}</span>
                     </p>
                     <p v-else class="warn"> No more classes this week</p>
                 </div>
-                <div v-if=isLibraryStudyRoom() class="block"> <!-- Block: library study room -->
-                    <b>Reserved Times</b>
-                    <table> <!-- UI needs to consider varying times unlike class times -->
-                        <tr v-for="item in getTodaysClasses()">
-                            {{ item[0] }}
-                            <td>{{ item[1] }}</td>
-                        </tr>
-                    </table>
+                <div v-if=isLibraryStudyRoom() class="library-study-room"> <!-- Block: library study room -->
+                    <div class="block">
+                        <b>Time Slots<br /><br /></b>
+                        <div class="time-slots">
+                            <button v-for="timeSlot in getTodaysClasses()" :key="timeSlot[1]" class="time-slot"
+                                :class="{ unavailable: timeSlot[0] === 'Unavailable' }"
+                                @click=" timeSlot[0] === 'Available' && openLink(timeSlot[2])"
+                                :disabled="timeSlot[0] !== 'Available'">
+                                {{ timeSlot[1] }}
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div v-else>
                     <div v-if="getTodaysClasses().length" class="block"> <!-- Block: today's room schedule -->
-                    <b>Today</b>
-                    <table>
-                        <tr v-for="item in getTodaysClasses()">
-                            {{ item[0] }}
-                            <td>{{ item[1] }}</td>
-                        </tr>
-                    </table>
+                        <b>Today</b>
+                        <table>
+                            <tr v-for="item in getTodaysClasses()">
+                                {{ item[0] }}
+                                <td>{{ item[1] }}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div v-if="getPrinters()" class="block"> <!-- Block: printers -->
                     <b>Printer{{ getPrinters().length > 1 ? 's' : '' }}</b>
                     <div v-for="p in getPrinters()" style="line-height: 0.5;">
-                        <p><h4>{{p[0]}}</h4></p>
-                        <p>Dimensions: {{p[1]}}&emsp;&emsp;Resolution: {{p[2]}}</p>
-                        <p>Color: {{p[3]}}&emsp;&emsp;Duplex: {{p[4]}}</p>
+                        <p>
+                        <h4>{{ p[0] }}</h4>
+                        </p>
+                        <p>Dimensions: {{ p[1] }}&emsp;&emsp;Resolution: {{ p[2] }}</p>
+                        <p>Color: {{ p[3] }}&emsp;&emsp;Duplex: {{ p[4] }}</p>
                     </div>
                 </div>
-                
+
             </div>
         </div>
         <div v-else-if="global.bldg" class="block warn">No classes here!</div>
     </div>
 </template>
-
 <script>
 
 export default {
@@ -121,7 +130,7 @@ export default {
                 } else { // If portrait mode
                     popup.style.height = "50vh"
                     popup.style.width = "100vw"
-                    popup.style.left = `${(window.innerWidth-popup.offsetWidth)/2}px`
+                    popup.style.left = `${(window.innerWidth - popup.offsetWidth) / 2}px`
                     popup.style.borderRadius = "15px 15px 0 0"
                     if (window.innerWidth > 800) buttonBox.style.bottom = "3vw"
                     else buttonBox.style.bottom = "52vh"
@@ -133,10 +142,10 @@ export default {
                 if (this.global.bldg) {
                     this.imgPath = new URL(`../../assets/photos/${this.global.bldg}.jpg`, import.meta.url).href
                     average(this.imgPath, { format: 'hex' })
-                    .then(color => { 
-                        photoBox.style.backgroundColor = `${color}20`
-                        photoBox.style.outlineColor = `${color}40`
-                    })
+                        .then(color => {
+                            photoBox.style.backgroundColor = `${color}20`
+                            photoBox.style.outlineColor = `${color}40`
+                        })
                 }
             }
         }
@@ -151,7 +160,7 @@ export default {
         } else { // If portrait mode
             popup.style.height = "50vh"
             popup.style.width = "100vw"
-            popup.style.left = `${(window.innerWidth-popup.offsetWidth)/2}px`
+            popup.style.left = `${(window.innerWidth - popup.offsetWidth) / 2}px`
             popup.style.borderRadius = "15px 15px 0 0"
             if (window.innerWidth > 800) buttonBox.style.bottom = "3vw"
             else buttonBox.style.bottom = "52vh"
@@ -166,9 +175,9 @@ export default {
             return bldg ? bldg : console.warn(`No classes here!`)
         },
         noData() { return !this.getBldg().hasOwnProperty(this.global.room) },
-        getSecs(type) { 
-            switch(type) {
-                case  'cur': return this.getRoom().meta.cur[1].length
+        getSecs(type) {
+            switch (type) {
+                case 'cur': return this.getRoom().meta.cur[1].length
                 case 'next': return this.getRoom().meta.next[1].length
             }
         },
@@ -197,7 +206,7 @@ export default {
         },
         parseDiners() { // Test
             if (isNaN(Object.keys(this.getBldg().meta.dining)[0][0])) {
-                let diners = []        
+                let diners = []
                 for (let diner in this.getBldg().meta.dining) {
                     if (diner == "url") continue
                     diners.push(diner)
@@ -207,7 +216,7 @@ export default {
         // Gathers the classes for the building
         getTodaysClasses() {
             let classes = []
-            let roomData = this.getRoom() 
+            let roomData = this.getRoom()
             for (let time in roomData) {
                 if (time.split(':')[0] == this.global.time.split(':')[0])
                     classes.push([roomData[time][0], this.getRealTime(time)])
@@ -237,12 +246,39 @@ export default {
         },
         isLibraryStudyRoom() {
             return this.getBldg().meta.name == "Folsom Library"
+        },
+        openLink(){
+            let roomName = this.getRoom().meta.name
+            let baseUrl = 'https://cal.lib.rpi.edu/space/'
+            if (roomName == '353a') {baseUrl += '161973'}
+            else if (roomName == '353b') {baseUrl += '161974'}
+            //add more conditionals for each study room
+            window.open(baseUrl, '_blank')
         }
     }
 }
 </script>
-
 <style scoped>
+.library-study-room .time-slots {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+}
+
+.library-study-room .time-slot {    /* Available slot color */
+    background-color: #7eff96;
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.library-study-room .time-slot.unavailable {    /* Unavailable slot color */
+    background-color: #ff5757;
+    border-radius: 10px;
+}
+
 #popup {
     width: 100vw;
     min-width: unset;
@@ -277,7 +313,7 @@ export default {
 
 #fadeout {
     background-image: linear-gradient(white, transparent);
-    position:relative;
+    position: relative;
     z-index: 1;
     height: 25px;
 }
@@ -326,7 +362,8 @@ export default {
     color: var(--hardborder);
 }
 
-table, td {
+table,
+td {
     line-height: 2.5;
     padding-left: 15px;
 }
@@ -362,7 +399,7 @@ tr:nth-child(even) {
 .block {
     /* background-color: paleturquoise; */
     margin: 10px;
-    padding: 10px;    
+    padding: 10px;
     border-radius: 10px;
     border: 1px solid var(--softborder);
     box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.05);
@@ -379,6 +416,4 @@ tr:nth-child(even) {
 li {
     line-height: 1.5;
 }
-
-
 </style>
