@@ -1,6 +1,7 @@
 <script setup>
 import tinycolor from "tinycolor2";
 import { ref } from "vue";
+import  Pin from './Pin.vue'
 </script>
 <template>
   <!-- data for every building -->
@@ -217,7 +218,7 @@ import { ref } from "vue";
         <path id="Union"
           d="m626.5 768.2 3.2.3 2.1.1-.1 10 9.1.2 5.5.1v1.9l.6 1.6 1.2 2 1.1 1.1 1.3.8 1.3.6 10.5.3 1.8-.2 2-1.1 1.5-1.5 1.2-1.8.7-2.3-.2-8.4 4.7.2h1.6l13.3.7.2-56.2-40.5-1.7-17.2-.7-.5 7.8H628l-1.6 46.2Z" />
         <!-- PIN PLACEHOLDER -->
-        <foreignObject v-for="pin in pins" style="pointer-events: none;" :x="pin.x" :y="pin.y" width="100%" height="100%">
+        <foreignObject v-for="pin in Pin.pins" style="pointer-events: none;" :x="pin.x" :y="pin.y" width="100%" height="100%">
           <div class = "map-overlays-icons">
             <p class="pin" v-if=pin.pinned style=" position:absolute; color:rgb(255, 255, 255); font-weight:1000;"><span class="map-overlays-icons">📌</span></p>
           </div>
@@ -275,10 +276,7 @@ export default {
       threshold: 1,
       doResize: "",
       zoom: 0,
-      pins: [{name: "DCC", x:460, y:820, pinned: false}, {name: "Low", x:498, y:820, pinned: false}, {name:"JEC", x: 370, y: 800, pinned: false}, {name:"JROWL", x:384, y:880, pinned: false}, {name:"CBIS", x: 520, y:915, pinned: false}, {name:"Academy",x:540, y: 996, pinned: false},{name:"Robinson", x:635, y:925, pinned: false},{name:"Armory", x:660, y:872, pinned: false},{name:"Mueller", x:660, y:835, pinned: false}, 
-      {name:"Commons", x:865, y:855, pinned: false}, {name: "Union", x:650, y:715, pinned: false}, {name:"Sage Dinning", x:530, y:750, pinned: false},{name:"'87 Gym", x:475, y: 660, pinned: false}, {name:"Ricketts", x:395, y:655, pinned: false}, {name:"Troy", x:330, y:655, pinned: false},{name:"Sage", x:245, y:685, pinned: false}, {name:"Walker", x:175, y: 700, pinned: false}, {name:"Pittsburgh", x:110, y: 680, pinned: false}, 
-      {name:"West", x:115, y:  620, pinned: false}, {name:"Winslow", x:45, y:715, pinned: false}, {name:"Carnegie", x:137, y: 750, pinned: false}, {name:"Amos_Eaton", x:190, y:770, pinned: false}, {name:"Lally", x:245, y:770, pinned: false}, {name:"Greene", x:300, y:768, pinned: false}, {name:"Folsom", x:200, y:855, pinned: false}, {name:"VCC", x:260, y:855, pinned: false},{name:"EMPAC", x:120, y:925, pinned: false}, {name:"MRC", x:205, y:950, pinned: false}, 
-      {name:"Empire", x:255, y:955, pinned: false}, {name:"Cogswell", x:325, y:962, pinned: false}],
+
     }
   },
   updated() {
@@ -309,16 +307,6 @@ export default {
     });
   },
   methods: {
-    modifyPin(name)
-    {
-      for(pin in this.pins)
-      {
-        if(pin.name == name)
-        {
-          pin.pinned = true
-        }
-      }
-    },
     onMouseScroll({deltaX,deltaY}) {
       if (!this.global.sFocus && !this.global.bldg){
         let dirwheel = 0;
