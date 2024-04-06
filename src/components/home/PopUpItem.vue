@@ -152,7 +152,6 @@ export default {
         // Returns the current building
         getBldg() {
             let bldg = this.global.data[this.global.bldg]
-            // bldg ? bldg : router.push({ name: 'home' })
             return bldg ? bldg : console.warn(`No classes here!`)
         },
         noData() { return !this.getBldg().hasOwnProperty(this.global.room) },

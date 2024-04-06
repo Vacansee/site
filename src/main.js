@@ -73,20 +73,25 @@ Promise.all([
 	  	// console.log(global.room)
 	  	// console.log(global.bldg !== "" && global.data[global.bldg] === undefined)
 	  	if (global.bldg !== "") {
-	  		if (global.bldg !== "" && global.data[global.bldg] === undefined) {
+	  		if (global.data[global.bldg] === undefined) {
+				console.log("Incorrect building")
 	  			global.bldg = ""
 	  			global.floor = null
 	  			global.room = ""
-	  			router.push({ name: 'home'})
+	  			router.push({ name: 'home' })
 				// this.$showToast({title: 'Invalid URL entered'})
 			}
-	  		// console.log(global.data[global.bldg].hasOwnProperty(global.room))
-	  		else if (!global.data[global.bldg].hasOwnProperty(global.room)) {
-				global.room = ""
 
+	  		// console.log(global.data[global.bldg].hasOwnProperty(global.room))
+	  		else if (global.room !== "" && !global.data[global.bldg].hasOwnProperty(global.room)) {
+				console.log("Incorrect room")
+				console.log()
+				global.room = ""
+				console.log(global.bldg, global.floor)
+				router.push({ name: 'buildingAndFloor', params: { building: global.bldg, floor: global.floor } })
 	  		}
 		}
-
+		console.log(global.bldg, global.floor, global.room)
 	})
   .catch(error => { this.$showToast({title: 'Failed to load data', body: error}) })
 
