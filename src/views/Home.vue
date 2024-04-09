@@ -183,8 +183,12 @@ export default {
         if (ratio < this.threshold) {
           portraitMode = true;
         }
+        // Adjusted is mousePos on screen itself
+        // abs is absolute position on map
         var adjustedX = this.mouseX - window.innerWidth/2;
         var adjustedY = this.mouseY - window.innerHeight/2;
+        var absX = adjustedX/this.zoom*40 + this.totalDisplacementX;
+        var absY = adjustedY/this.zoom*40 + this.totalDisplacementY;
         let tempZoom=0;
         if (portraitMode) {
           tempZoom = y/50+this.zoom+dirwheel*10;
@@ -203,15 +207,9 @@ export default {
           // UB
           if (this.zoom >= 75) this.zoom = 75;
         }
-        if (dirwheel == -1) {
-          this.totalDisplacementX -= adjustedX * (this.zoom-30)/75;
-          this.totalDisplacementY -= adjustedY * (this.zoom-30)/75;
-        }
-        if (dirwheel == 1) {
-          this.totalDisplacementX += adjustedX * (75-this.zoom)/75;
-          this.totalDisplacementY += adjustedY * (75-this.zoom)/75;
-        }
-        mapBox.style.transition = "250ms ease all"
+        this.totalDisplacementX = absX - adjustedX/this.zoom*40;
+        this.totalDisplacementY = absY - adjustedY/this.zoom*40;
+        mapBox.style.transition = "75ms ease all"
         this.moveInBounds();
       }
     },
