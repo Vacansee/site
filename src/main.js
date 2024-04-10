@@ -17,6 +17,8 @@ import './assets/main.css'
 import {Routing} from "@/router";
 // Import router to update URL
 import router from "./router";
+// Import toast function FINISH
+// import {toastNotification} from "@/views/Home.vue";
 
 // Primevue resources
 import PrimeVue from 'primevue/config';
@@ -70,28 +72,40 @@ Promise.all([
 		checkActive()
 		global.firstCalc = true
 	  	Routing(global)
-	  	// console.log(global.room)
-	  	// console.log(global.bldg !== "" && global.data[global.bldg] === undefined)
+	  	// Error checking for invalid URL paths entered by user
 	  	if (global.bldg !== "") {
+			// Invalid building entered
 	  		if (global.data[global.bldg] === undefined) {
 				console.log("Incorrect building")
 	  			global.bldg = ""
 	  			global.floor = null
 	  			global.room = ""
 	  			router.push({ name: 'home' })
-				// this.$showToast({title: 'Invalid URL entered'})
-			}
+				// Add toast notifications FINISH
 
-	  		// console.log(global.data[global.bldg].hasOwnProperty(global.room))
+			}
+			// Invalid floor entered  FINISH
+			// else if (!global.data[global.bldg].hasOwnProperty(global.floor)) {
+			// 	console.log("Yes")
+			// }
+	  		// Invalid room entered
 	  		else if (global.room !== "" && !global.data[global.bldg].hasOwnProperty(global.room)) {
 				console.log("Incorrect room")
-				console.log()
 				global.room = ""
 				console.log(global.bldg, global.floor)
 				router.push({ name: 'buildingAndFloor', params: { building: global.bldg, floor: global.floor } })
 	  		}
 		}
-		console.log(global.bldg, global.floor, global.room)
+		// Invalid floor or room entered (number not entered)
+		if (global.bldg === "" && (router.currentRoute.value.name === "buildingAndFloor" || router.currentRoute.value.name === "buildingAndRoom")) {
+			console.log("Incorrect floor or room")
+			global.bldg = ""
+			global.floor = null
+			global.room = ""
+			router.push({ name: 'home' })
+		}
+		// console.log(global.data[global.bldg].meta.)
+	  	// toastNotification()
 	})
   .catch(error => { this.$showToast({title: 'Failed to load data', body: error}) })
 

@@ -58,7 +58,7 @@ router.beforeResolve((to, from, next) => {
     const pathComponents = to.path.split('/').filter(component => component !== '');
     if (!isNaN(pathComponents[1]) && pathComponents[0] !== "") {
       router_info.pathBuilding = pathComponents[0]
-      if (pathComponents[1] <= 7) {
+      if (pathComponents[1] <= 9) {
         router_info.pathFloor = Number(pathComponents[1])
         if (router_info.pathFloor < 0) router_info.pathFloor = 1
         router_info.pathFloor = Math.floor(router_info.pathFloor)
@@ -69,6 +69,8 @@ router.beforeResolve((to, from, next) => {
   }
   next();
 });
+
+// REMOVE COMMENTED CODE BELOW ONCE MAIN.JS is finished
 
 // Function to check URL path?
 // router.afterEach((to, from) => {
