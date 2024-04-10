@@ -46,7 +46,14 @@ export default {
       filteredResults: [],
       selection: "",
       RAD2DEG: 180/Math.PI,
-      DEG2RAD: Math.PI/180
+      DEG2RAD: Math.PI/180,
+      CONSTPOS1: [42.730790, -73.680281],
+      CONSTPOS2: [42.731036, -73.680240],
+      ANGLE: 0.0,
+      // top left corner: 42.733115, -73.683526 with (65, 478)
+      // bottom right corner 42.724859, -73.673789 with (970, 1205)
+      XSCALE: -(42.733115-42.724859)*(65-970),
+      YSCALE: -(-73.683526- -73.673789)*(478-1205),
     }
   },
   inject: ["global"],
@@ -66,6 +73,9 @@ export default {
         if (this.global.error) this.$showToast({title: 'Failed to load data', body: this.global.error})
       }
     }
+  },
+  mounted() {
+    this.ANGLE = Math.atan((this.CONSTPOS2[1]-this.CONSTPOS1[1])/(this.CONSTPOS2[0]-this.CONSTPOS1[0]));
   },
   methods: {
     filterResults(event) {
@@ -91,9 +101,7 @@ export default {
     }
   },
   methods: {
-    locationError(err) {
-      this.$showToast({title: 'Failed to get location', body: err.message})
-    },
+    
     getLocation() {
       /**
        * Gets the location of the current device
@@ -101,11 +109,14 @@ export default {
        * Second param runs if it didn't get location
        * last param is for options
        */
-      navigator.geolocation.getCurrentPosition(this.locationObtained, this.locationError)
+      navigator.geolocation.getCurrentPosition(this.calcPosition, this.locationError)
     },
 
+    locationError(err) {
+      this.$showToast({title: 'Failed to get location', body: err.message})
+    },
     // currently not working correctly 
-    latituteToY(lat) { return Math.log(Math.tan(this.PI/4 + lat * this.DEG2RAD / 2)) * this.R},
+    latituteToY(lat) { return Math.log(Math.tan(Math.PI/4 + lat * this.DEG2RAD / 2)) * this.R},
     longituteToX(lon) { return lon * this.DEG2RAD * this.R; },
 
     locationCheck(x,y,accuracy) {
@@ -118,10 +129,15 @@ export default {
         return
       }
     },
-    
-    locationObtained(pos) {
-
-      
+    convert(lon, lat) {
+      const pos = [];
+      console.log(this.XSCALE);
+      console.log(this.YSCALE);
+      pos[0] = this.XSCALE * lon * Math.cos(this.ANGLE)+68;
+      pos[1] = this.YSCALE * lat * Math.sin(this.ANGLE)+478;
+      return pos;
+    },
+    calcPosition(pos) {
 
       // // old code from Matt Sweet (lead fall 23)
       /*
@@ -187,11 +203,18 @@ export default {
       console.log(`Longitude: ${crd.longitude}`);
       console.log('svg coords: ' + svgX + ' '  + svgY)
       console.log(`More or less ${crd.accuracy} meters.`);
-      this.locationCheck(svgX,svgY,crd.accuracy);
+      // this.locationCheck(svgX,svgY,crd.accuracy);
 
-      this.global.userCoords = [svgX, svgY];
+      // harcode attempt with 42.730772, -73.680271
+      // (on an intersection of a path)
+      
+      const convertedPos = this.convert(42.730772, -73.680271)//this.convert(crd.longitude, crd.latitude);
+      // convertedPos[0] = svgX;
+      // convertedPos[1] = svgY;
+      this.global.userCoords = [convertedPos[0], convertedPos[1]];
     }
-  }
+  },
+  
 }
 </script>
 <style scoped>

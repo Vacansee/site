@@ -167,17 +167,17 @@ import tinycolor from "tinycolor2";
       <g id="buildings">
         <foreignObject style="pointer-events: none;" x="65" y="478" width="100%" height="100%">
           <div class = "map-overlays-icons">
-            <p id="test" style=" position:absolute; color:black; font-weight:1000;"><span class="map-overlays-icons">o</span></p>
+            <p id="test" style=" position:absolute; color:black; font-weight:1000;"><span class="map-overlays-icons">x</span></p>
           </div>
         </foreignObject>
         <foreignObject style="pointer-events: none;" x="970" y="1205" width="100%" height="100%">
           <div class = "map-overlays-icons">
-            <p id="test2" style=" position:absolute; color:black; font-weight:1000;"><span class="map-overlays-icons">o</span></p>
+            <p id="test2" style=" position:absolute; color:black; font-weight:1000;"><span class="map-overlays-icons">y</span></p>
           </div>
         </foreignObject>
         <foreignObject style="pointer-events: none;" x="65" y="1205" width="100%" height="100%">
           <div class = "map-overlays-icons">
-            <p id="test2" style=" position:absolute; color:black; font-weight:1000;"><span class="map-overlays-icons">o</span></p>
+            <p id="test2" style=" position:absolute; color:black; font-weight:1000;"><span class="map-overlays-icons">z</span></p>
           </div>
         </foreignObject>
         <foreignObject style="pointer-events: none;" x="970" y="478" width="100%" height="100%">
@@ -185,11 +185,11 @@ import tinycolor from "tinycolor2";
             <p id="test2" style=" position:absolute; color:black; font-weight:1000;"><span class="map-overlays-icons">o</span></p>
           </div>
         </foreignObject>
-        <!-- <foreignObject style="pointer-events: none;" x="416.0862838916114" y="904.2429596911697" width="100%" height="100%">
+        <foreignObject style="pointer-events: none;" :x="this.global.userCoords[0]" :y="this.global.userCoords[1]" width="300%" height="300%">
           <div class = "map-overlays-icons">
-            <p id="test3" style=" position:absolute; color:black; font-weight:1000;"><span class="map-overlays-icons">o</span></p>
+            <p id="test3" style=" position:absolute; color:black; font-weight:1000;"><span class="map-overlays-icons">qtweyrui</span></p>
           </div>
-        </foreignObject> -->
+        </foreignObject>
         <path id="CBIS"
           d="m444 941.4 2.3.7.7 1.7 3.1 2.1.9 2.5 5.2 2.1 5.4-.4.9-.5s1.2 2.7 3.3 3c2.2.1 2.9-2 2.9-2l8.6.4-1 13.6 84.2 4 3.5.1-.3 4.5 11.4.5 1.6-77.9-11-.1-.2 6.7-4.8-.3.6-12-11.7-.7.1 4-9.5-.6-.6 40.5-81-2.2v-2.6h-12l-1 2.6h1.7l-3.4 10.3Z" />
         <path id="EMPAC"
