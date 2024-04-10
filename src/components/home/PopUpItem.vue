@@ -55,20 +55,19 @@ import InfoIcon from '@/assets/icons/info.svg?component'
                         <b>Overview</b><br><br>
                         <span>Capacity: ~{{ getRoom().meta.max }}&emsp;&emsp;</span>
                         <span v-if="!getPrinters()">Printers: none</span>
-                        <p v-if="getRoom().meta.cur"><b>{{ getRoom().meta.cur[0] }}</b> ends in
+                        <p v-if="getRoom().meta.cur[0] == 'Unavailable'">Reservation ends in 
                             <b>{{ getCur().hours() }}h</b> and
                             <b>{{ getCur().minutes() }}m</b>
                             <span v-if="getSecs('cur') > 0"> for section{{ (getSecs('cur') > 1) ? 's ' : ' ' }}</span>
                             <span v-for="item in getRoom().meta.cur[1]" class="sec">{{ item }}</span>
                         </p>
-                        <p v-else>No class in session</p>
-                        <p v-if="getRoom().meta.next">Next class (<b>{{ getRoom().meta.next[0] }}</b>) starts in
-                            <b>{{ getNext().hours() }}h</b> and
-                            <b>{{ getNext().minutes() }}m</b>
-                            <span v-if="getSecs('next') > 0"> for section{{ (getSecs('next') > 1) ? 's ' : ' ' }}</span>
-                            <span v-for="item in getRoom().meta.next[1]" class="sec">{{ item }}</span>
+                        <p v-else>No reservation in session</p>
+                        <!-- <p v-if="getRoom().meta.next">Next class (<b>{{ getRoom().meta.next[0] }}</b>) starts in -->
+                        <p v-if="getNextReservation()">Next reservation starts in
+                            <b>{{ getNextReservation().hours() }}h</b> and
+                            <b>{{ getNextReservation().minutes() }}m</b>
                         </p>
-                        <p v-else class="warn"> No more classes this week</p>
+                        <p v-else class="warn"> No more reservations this week</p>
                     </div>
 
                     <div class="block reservation-block"> <!-- Block #2: Reservation Time Slots-->
@@ -212,6 +211,28 @@ export default {
         getNext() {
             const i = moment(this.global.time, 'e:HHmm'), f = this.getRoom().meta.next[2]
             return moment.duration(f.diff(i))
+        },
+        // Returns the next reservation (for reservation rooms) 
+        getNextReservation() {
+            let nextSlots = []
+            let roomData = this.getRoom()
+            let proceed  = false
+            for (let time in roomData) {
+                if (time.split(':')[0] == this.global.time.split(':')[0])
+                    if (this.getRealTime(this.getRoom().meta.next[2]) == this.getRealTime(time)) { 
+                        proceed = true; 
+                    }
+                    if (proceed) {
+                        nextSlots.push([roomData[time][0], time])
+                    }
+            }
+            for (let timeSlot in nextSlots) {
+                if (nextSlots[timeSlot][0] == 'Unavailable') {
+                    const i = moment(this.global.time, 'e:HHmm'), f = moment(nextSlots[timeSlot][1], 'e:HHmm')
+                    return moment.duration(f.diff(i))
+                } 
+            } 
+            return false
         },
         // Returns all data for the current room
         getRoom() { return this.getBldg()[this.global.room] },
