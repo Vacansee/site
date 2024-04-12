@@ -17,16 +17,19 @@
       <div class="tab-content">
         <div v-for="(option, index) in diningOptions" :key="index" v-show="activeTab === index">
           <h3>{{ option.name }}</h3>
+          <!-- Handle sub-options for complex entries like Student Union -->
           <div v-if="option.subOptions" class="scrollable-content">
             <div v-for="(sub, subKey) in option.subOptions" :key="subKey">
               <h4>{{ subKey }}</h4>
-              <p>Times: {{ sub.times.join(', ') }}</p>
-              <a :href="`https://${sub.url}`" target="_blank">More details</a>
+              <p>Hours: {{ sub.times.join(', ') }}</p>
+              <!-- Ensure the URL is prefixed with https if not already included -->
+              <a :href="sub.url.includes('http') ? sub.url : `https://${sub.url}`" target="_blank" rel="noopener noreferrer">More details</a>
             </div>
           </div>
+          <!-- Handle simple dining options -->
           <div v-else>
-            <p>Times: {{ option.times.join(', ') }}</p>
-            <a :href="`https://${option.url}`" target="_blank">More details</a>
+            <p>Hours: {{ option.times.join(', ') }}</p>
+            <a :href="option.url.includes('http') ? option.url : `https://${option.url}`" target="_blank" rel="noopener noreferrer">More details</a>
           </div>
         </div>
       </div>
@@ -36,6 +39,7 @@
   </div>
 </template>
 
+
 <script>
 export default {
   data() {
@@ -43,26 +47,26 @@ export default {
       visible: false,
       activeTab: 0, // Default to the first tab
       diningOptions: [
-        { name: "DCC Cafe", times: ["07:30-18:00"], url: "dcc-cafe" },
-        { name: "Evelyn's Cafe", times: ["11:00-14:00"], url: "evelyns_cafe" },
-        { name: "Argo Tea", times: ["09:00-18:00"], url: "library-cafe" },
+        { name: "DCC Cafe", times: ["07:30-18:00"], url: "https://rpi.sodexomyway.com/dining-near-me/dcc-cafe" },
+        { name: "Evelyn's Cafe", times: ["11:00-14:00"], url: "https://rpi.sodexomyway.com/dining-near-me/evelyns_cafe" },
+        { name: "Argo Tea", times: ["09:00-18:00"], url: "https://rpi.sodexomyway.com/dining-near-me/library-cafe" },
         {
           name: "Student Union",
           subOptions: {
-            "Father's Marketplace": { times: ["08:00-23:00"], url: "fathers-marketplace" },
-            "Panera Bread": { times: ["08:00-20:00"], url: "mcneil-room" },
-            "Thunder Mountain Curry": { times: ["11:00-15:00"], url: "TMC" },
-            "Wild Blue Sushi": { times: ["11:00-22:00"], url: "wild_blue_sushi" },
-            "Collar City Grill": { times: ["11:00-23:00"], url: "CCG" },
-            "Halal Shack": { times: ["17:00-23:00"], url: "Halal_shack" }
+            "Father's Marketplace": { times: ["08:00-23:00"], url: "https://rpi.sodexomyway.com/dining-near-me/fathers-marketplace" },
+            "Panera Bread": { times: ["08:00-20:00"], url: "https://rpi.sodexomyway.com/dining-near-me/mcneil-room" },
+            "Thunder Mountain Curry": { times: ["11:00-15:00"], url: "https://rpi.sodexomyway.com/dining-near-me/mcneil-room" },
+            "Wild Blue Sushi": { times: ["11:00-22:00"], url: "https://rpi-preview.sodexomyway.com/dining-near-me/wild_blue_sushi" },
+            "Collar City Grill": { times: ["11:00-23:00"], url: "https://rpi.sodexomyway.com/dining-near-me/CCG" },
+            "Halal Shack": { times: ["17:00-23:00"], url: "https://rpi.sodexomyway.com/dining-near-me/Halal_shack" }
           }
         },
-        { name: "The Beanery Cafe", times: ["07:30-15:00"], url: "beanery-cafe" },
-        { name: "Blitman Dining Hall", times: ["07:00-09:30 Breakfast", "10:30-13:30 Brunch", "17:00-20:00 Dinner"], url: "blitman-dining-hall" },
-        { name: "BARH Dining Hall", times: ["07:00-09:30 Breakfast", "11:00-13:00 Brunch", "17:00-21:00 Dinner"], url: "barh-dining-hall" },
-        { name: "Russell Sage Dining Hall", times: ["07:00-10:00 Breakfast", "10:00-11:00 Continental Breakfast", "11:00-14:30 Lunch", "16:00-20:00 Dinner"], url: "russell-sage" },
-        { name: "Simply to Go", times: ["08:00-11:00 Breakfast", "11:00-15:30 Lunch"], url: "simply-to-go" },
-        { name: "Commons Dining Hall", times: ["07:00-10:00 Breakfast", "10:00-11:00 Continental Breakfast", "11:00-15:30 Lunch", "16:30-21:00 Dinner", "21:00-22:30 Late Night"], url: "commons-dining-hall" }
+        { name: "The Beanery Cafe", times: ["07:30-15:00"], url: "https://rpi.sodexomyway.com/dining-near-me/beanery-cafe" },
+        { name: "Blitman Dining Hall", times: ["07:00-09:30 Breakfast", "10:30-13:30 Brunch", "17:00-20:00 Dinner"], url: "https://rpi.sodexomyway.com/dining-near-me/blitman-dining-hall" },
+        { name: "BARH Dining Hall", times: ["07:00-09:30 Breakfast", "11:00-13:00 Brunch", "17:00-21:00 Dinner"], url: "https://rpi.sodexomyway.com/dining-near-me/barh-dining-hall" },
+        { name: "Russell Sage Dining Hall", times: ["07:00-11:00 Breakfast", "11:00-14:30 Lunch", "16:00-20:00 Dinner"], url: "https://rpi.sodexomyway.com/dining-near-me/russell-sage" },
+        { name: "Simply to Go", times: ["08:00-11:00 Breakfast", "11:00-15:30 Lunch"], url: "https://rpi.sodexomyway.com/dining-near-me/simply-to-go" },
+        { name: "Commons Dining Hall", times: ["07:00-11:00 Breakfast", "11:00-15:30 Lunch", "16:30-22:30 Dinner"], url: "https://rpi.sodexomyway.com/dining-near-me/commons-dining-hall" }
       ],
     };
   },
@@ -93,15 +97,20 @@ export default {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  max-width: 500px;
+  width: 80%; /* Responsive width */
+  max-width: 800px; /* Increased maximum width */
   text-align: center;
+  overflow: hidden; /* Ensures no overflow */
 }
 .tabs {
   display: flex;
+  overflow-x: auto; /* Enables horizontal scrolling */
+  white-space: nowrap; /* Prevents wrapping of tabs */
   padding-bottom: 10px;
   border-bottom: 1px solid #ccc;
 }
 .tab {
+  flex-shrink: 0; /* Prevents tabs from shrinking */
   margin-right: 10px;
   cursor: pointer;
   padding: 5px;
