@@ -66,6 +66,7 @@ export default {
     }
   },
   mounted() {
+    this.$showToast({title: 'Test'})
     this.changeEx()
     setInterval(this.changeEx, 5000);
   },

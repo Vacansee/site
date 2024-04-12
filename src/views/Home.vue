@@ -63,7 +63,7 @@ export default {
     }
   },
   mounted() {
-    // addEventListeners allow the file to call a function when 
+    // addEventListeners allow the file to call a function when
     // an action occurs
     mask.addEventListener("click", this.buildingDeselect)
     window.addEventListener("mousemove", this.nameTagMove)

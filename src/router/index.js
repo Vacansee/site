@@ -19,7 +19,8 @@ export const router_info = reactive({
   pathFloor: null,
   pathRoom: '',
   firstLoad: true,
-  invalidLoad: false
+  invalidLoad: false,
+  invalidMessage: ""
 })
 
 const router = createRouter({
@@ -60,7 +61,10 @@ router.beforeResolve((to, from, next) => {
       router_info.pathBuilding = pathComponents[0]
       if (pathComponents[1] <= 9) {
         router_info.pathFloor = Number(pathComponents[1])
-        if (router_info.pathFloor < 0) router_info.pathFloor = 1
+        if (router_info.pathFloor < 0) {
+          router_info.pathBuilding = ""
+          router_info.pathFloor = null
+        }
         router_info.pathFloor = Math.floor(router_info.pathFloor)
       } else {
         router_info.pathRoom = pathComponents[1]
@@ -103,7 +107,7 @@ router.beforeResolve((to, from, next) => {
 // Sets global variables to user inputted URL path values
 export function Routing(mainGlobal) {
   if (router_info.pathBuilding) {
-    mainGlobal.bldg = router_info.pathBuilding
+    mainGlobal.bldg = router_info.pathBuilding.toUpperCase()
     mainGlobal.floor = router_info.pathFloor
     mainGlobal.room = router_info.pathRoom
   }
