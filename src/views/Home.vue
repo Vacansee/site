@@ -50,6 +50,7 @@ export default {
   },
   watch: {
     // Move the popup to the right spot off-view if popup isnt selected
+    // O(1)
     'global.aspectRatio': {
       handler() {
         // If landscape mode
@@ -63,6 +64,7 @@ export default {
         }
       }
     },
+    // O(n), n is number of buildings
     'global.bldg': {
       handler() {
         if ([...Object.keys(this.global.data)].includes(this.global.bldg)) {
@@ -71,37 +73,48 @@ export default {
           }
         }
       }
+    },
+    'clicked': {
+      handler() {
+        console.log("test");
+        if (this.clicked) {
+          window.addEventListener("mousemove", this.onClick())
+        } else {
+          window.removeEventListener("mousemove", this.onClick());
+        }
+      }
     }
   },
   mounted() {
-    // addEventListeners allow the file to call a function when 
-    // an action occurs
-    window.addEventListener("mousemove", (window) => {
-      this.mouseX = window.clientX;
-      this.mouseY = window.clientY;
-      this.moveScreen()
-    })
-    mask.addEventListener("click", this.buildingDeselect)
-    window.addEventListener("mouseup", () => {this.clicked = false, this.totalDisplacementX += this.curMoveX,  this.totalDisplacementY += this.curMoveY, this.moveInBounds()})
-    window.addEventListener("mousedown", this.getInitMouse)
+    // addEventListeners allow the file to call a function when an action occurs
+    // O(1) on click
+    mask.addEventListener("click", this.buildingDeselect())
+    // O(1) on mouseUp
+    window.addEventListener("mouseup", () => {this.clicked = false, this.totalDisplacementX += this.curMoveX,  
+      this.totalDisplacementY += this.curMoveY, this.moveInBounds})
+    // O(1) on mouseDown
+    window.addEventListener("mousedown", (window) => {this.mouseX = window.clientX, this.mouseY = window.clientY, this.getInitMouse(), console.log(this.clicked)})
+    // O(1) on mousemove
     window.addEventListener("mousemove", this.nameTagMove)
+    // O(n) where n is numbe of nav-btns
     Array.from(document.getElementsByClassName("nav-btn")).forEach((btn) => {
       btn.addEventListener("mouseover", () => { this.nameTagAppear(btn) })
       btn.addEventListener("mouseleave", () => {this.nameTagDisappear})
     })
+    // O(n) where n is number of actual buildings
     for (const b of buildings.children) {
       b.addEventListener("mouseover", () => { this.nameTagAppear(b) })
       b.addEventListener("mouseleave", this.nameTagDisappear)
       b.addEventListener("click", () => { this.buildingSelect(b) })
     }
-
+    // O(n) where n is number of extra buildings
     for (const o of other.children) {
       o.addEventListener("mouseover", () => { this.nameTagAppear(o) })
       o.addEventListener("mouseleave", this.nameTagDisappear)
       o.addEventListener("click", () => {
         this.$showToast({type: 'info', title: 'Unavailable', body: "This isn\'t a public facility", lasts: 2000}) })
     }
-
+    // Rest of code in mounted is O(1)
     // If landscape mode
     // Fixes issue where transitions when unselected would show the popup for a split second
     popup.style.transition = "transform .0s"
@@ -113,6 +126,12 @@ export default {
     }
   },
   methods: {
+    onClick() {
+      this.mouseX = window.clientX;
+      this.mouseY = window.clientY;
+      this.moveScreen();
+      this.moveInBounds();
+    },
     runFind() {
       console.clear()
       let count = 0 
@@ -166,6 +185,7 @@ export default {
       }
     },
     getInitMouse() {
+      console.log("testing");
       this.initMouseX = this.mouseX
       this.initMouseY = this.mouseY
       this.curMoveX = 0
@@ -188,16 +208,14 @@ export default {
     },
     // Have the name tag move along with the cursor
     nameTagMove(c) {
-      let clickX = c.clientX
-      let clickY = c.clientY
       if (this.label == "GitHub" || this.label == "Feedback")
-        this.mouseTop = clickY + 30
-      else this.mouseTop = clickY - 50
+        this.mouseTop = c.clientY + 30
+      else this.mouseTop = c.clientY - 50
 
       let tagWidth = 20
       if (this.ntVisible == 1)
         tagWidth = nametag.getBoundingClientRect().width
-      this.mouseLeft = clickX - (tagWidth / 2.2)
+      this.mouseLeft = c.clientX - (tagWidth / 2.2)
     },
     // events that occur when a room is hovered over
     onRoomHover(roomHover) {
@@ -229,10 +247,6 @@ export default {
         mask.style.opacity = 0.65
         mask.style.pointerEvents = "inherit"
         mapBox.style.transition = "800ms ease all"
-        console.log(window.innerWidth / 2 - boxCenterX + this.totalDisplacementX);
-        console.log(window.innerHeight / 2 - boxCenterY - 50);
-        console.log(boxCenterX, boxCenterY);
-        console.log(this.totalDisplacementX, this.totalDisplacementY)
 
         mapBox.style.transform = `scale(3) translate(${window.innerWidth / 2 - boxCenterX}px, ${window.innerHeight / 2 - boxCenterY - 50}px)`
         // Bring the popup to 0,0
