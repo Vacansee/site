@@ -36,8 +36,9 @@ const global = reactive({ // The global reactive object!
 
 // On page load, fetch building/room and search data from Vacansee/data:
 Promise.all([
-	fetch('data_play.json').then(resp => {
-		return resp.json()
+	fetch('https://raw.githubusercontent.com/Vacansee/data/main/data/data.json').then(resp => {
+	  if (!resp.ok) throw new Error(`failed on 'data.json': ${resp.status}`)
+	  return resp.json()
 	}),
 	fetch('https://raw.githubusercontent.com/Vacansee/data/main/data/search/byCRN.json').then(resp => {
 	  if (!resp.ok) throw new Error(`failed on 'byCRN.json': ${resp.status}`)
@@ -47,10 +48,10 @@ Promise.all([
 		if (!resp.ok) throw new Error(`failed on 'deptToCRN.json': ${resp.status}`)
 		return resp.json()
 	}),
-	fetch('https://raw.githubusercontent.com/Vacansee/data/main/data/search/titleToCRN.json').then(resp => {
-		if (!resp.ok) throw new Error(`failed on 'titleToCRN.json': ${resp.status}`)
-		return resp.json()
-	}),
+	// fetch('https://raw.githubusercontent.com/Vacansee/data/main/data/search/titleToCRN.json').then(resp => {
+	// 	if (!resp.ok) throw new Error(`failed on 'titleToCRN.json': ${resp.status}`)
+	// 	return resp.json()
+	// }),
 	fetch('https://raw.githubusercontent.com/Vacansee/data/main/data/search/toRoom.json').then(resp => {
 		if (!resp.ok) throw new Error(`failed on 'deptToCRN.json': ${resp.status}`)
 		return resp.json()
@@ -62,12 +63,10 @@ Promise.all([
 		// Adds an event listener to update resize when the window is resized
 		window.addEventListener("resize", updateAspectRatio)
 		console.log('Data loaded!')
-		checkActive() 
+		checkActive()
 		global.firstCalc = true
 	})
-  .catch(error => { 
-	this.$showToast({title: 'Failed to load data', body: error}) 
-	})
+  .catch(error => { this.$showToast({title: 'Failed to load data', body: error}) })
 
 
 // Consider global.data a living document: most of it's values are pre-generated & retrieved from
@@ -76,8 +75,9 @@ Promise.all([
 // checkActive() is run regularly and updates "meta" properties for both rooms and buildings
 function checkActive() {
 	// Loop through the global reactive variable data
-	for (let b in global.data) { //global.data has 13 elements
-		let bldg = global.data[b], sum = 0, longest = 0, outflow = 0, inflow = 0
+	for (let b in global.data) {
+		let bldg = global.data[b],
+		sum = 0, longest = 0, outflow = 0, inflow = 0
 		// If heat isn't in bldg.meta, set heat to 0
 		// Loop thorugh building data
 		for (let r in bldg) {

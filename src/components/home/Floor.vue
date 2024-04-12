@@ -135,7 +135,7 @@ export default {
             path.addEventListener("mouseleave", () => { this.$emit('room-hover', ['', false])  } )
           }
           if (roomInfo) {
-            if (roomInfo.meta.cur && roomInfo.meta.cur[0] != 'Available') { // if room is "available" it will be colored as a free class
+            if (roomInfo.meta.cur && roomInfo.meta.cur[0] != 'Available') { // if room is "available" it will be colored as a free room
               path.setAttribute("fill", "#fc4e58"); 
               path.style.stroke = tinycolor("#fc4e58").darken(20).toString()
               path.setAttribute("cursor", "pointer")
