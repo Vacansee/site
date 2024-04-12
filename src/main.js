@@ -135,6 +135,8 @@ function checkActive() {
 		// console.log(b, bldg.meta.flow.toFixed(2), bldg.meta.max, (logisitc).toFixed(2) )
 		bldg.meta.longest = longest
 		// if (oldHeat != bldg.meta.heat) console.log(`${oldHeat} -> ${bldg.meta.heat}`)
+
+		checkDark();
 	}
 }
 
@@ -161,6 +163,21 @@ setInterval(() => { // Update current time every second
 function updateAspectRatio() { // Updates the aspect ratio globally
 	global.aspectRatio = window.innerHeight/window.innerWidth
 }
+
+// Checks and applies dark mode (doesnt work lol)
+function checkDark() {
+	const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+	$(function() {
+		if (prefersDark || global.darkMode) {
+			$('body').addClass('dark');
+		}
+		$('.dark-mode-switcher').on('click', function(e) {
+			$('body').toggleClass('dark');
+			e.preventDefault();
+		});
+	}); 
+}
+
 // Creates the app 
 const app = createApp(App)
 app.provide('global', global);
