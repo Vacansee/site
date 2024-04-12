@@ -67,7 +67,7 @@ import InfoIcon from '@/assets/icons/info.svg?component'
                             <b>{{ getNextReservation().hours() }}h</b> and
                             <b>{{ getNextReservation().minutes() }}m</b>
                         </p>
-                        <p v-else class="warn"> No more reservations this week</p>
+                        <p v-else class="warn"> No more reservations today</p>
                     </div>
 
                     <div class="block reservation-block"> <!-- Block #2: Reservation Time Slots-->
@@ -301,10 +301,10 @@ export default {
             let baseUrl = 'https://cal.lib.rpi.edu/space/'
             if (roomName == '353a') { baseUrl += '161973' }
             else if (roomName == '353b') { baseUrl += '161974' }
-            else if (roomName == '431') { baseUrl += 161979 }
-            else if (roomName == '438') { baseUrl += 161978 }
-            else if (roomName == '451') { baseUrl += 161976 }
-            else if (roomName == '458') { baseUrl += 161982 }
+            else if (roomName == '431') { baseUrl += '161979' }
+            else if (roomName == '438') { baseUrl += '161978' }
+            else if (roomName == '451') { baseUrl += '161976' }
+            else if (roomName == '458') { baseUrl += '161982' }
             window.open(baseUrl, '_blank')
         }
     }
