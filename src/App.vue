@@ -8,6 +8,7 @@ import AutoComplete from 'primevue/autocomplete'
 import Button from "primevue/button"
 import Toast from 'primevue/toast'
 import MapItem from '../src/components/home/MapItem.vue';
+import {router_info} from "@/router";
 </script>
 
 <template>
@@ -66,7 +67,6 @@ export default {
     }
   },
   mounted() {
-    this.$showToast({title: 'Test'})
     this.changeEx()
     setInterval(this.changeEx, 5000);
   },

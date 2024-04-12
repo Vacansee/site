@@ -19,8 +19,7 @@ export const router_info = reactive({
   pathFloor: null,
   pathRoom: '',
   firstLoad: true,
-  invalidLoad: false,
-  invalidMessage: ""
+  invalidLoadMessage: ""
 })
 
 const router = createRouter({

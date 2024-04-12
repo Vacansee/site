@@ -17,8 +17,6 @@ import './assets/main.css'
 import {router_info, Routing} from "@/router";
 // Import router to update URL
 import router from "./router";
-// Import toast function FINISH
-// import {toastNotification} from "@/views/Home.vue";
 
 // Primevue resources
 import PrimeVue from 'primevue/config';
@@ -74,13 +72,14 @@ Promise.all([
 	  	Routing(global)
 	  	// Error checking for invalid URL paths entered by user
 	  	// console.log(global.bldg, global.floor, global.room)
+	  	// FINISH COMMENTS / DOCUMENTATION
 	  	if (global.bldg === "" && router.currentRoute.value.name !== "home") {
 			console.log("Invalid URL format")
 			global.bldg = ""
 			global.floor = null
 			global.room = ""
 			router.push({ name: 'home' })
-
+			router_info.invalidLoadMessage = "Invalid URL format"
 		}
 	  	else if (global.bldg !== "") {
 			// Invalid building entered
@@ -90,13 +89,14 @@ Promise.all([
 	  			global.floor = null
 	  			global.room = ""
 	  			router.push({ name: 'home' })
-
+				router_info.invalidLoadMessage = "Invalid building entered"
 			}
 			// Invalid floor entered
 			else if (global.floor > global.data[global.bldg].meta.floors[0]) {
 				console.log("Too high of a floor")
 				global.floor = global.data[global.bldg].meta.floors[1]
 				router.push({ name: 'buildingAndFloor', params: { building: global.bldg, floor: global.floor } })
+				router_info.invalidLoadMessage = "Invalid floor entered"
 			}
 	  		// Invalid room entered
 	  		else if (global.room !== "" && !global.data[global.bldg].hasOwnProperty(global.room)) {
@@ -104,8 +104,11 @@ Promise.all([
 				global.floor = global.data[global.bldg].meta.floors[1]
 				global.room = ""
 				router.push({ name: 'buildingAndFloor', params: { building: global.bldg, floor: global.floor } })
-	  		}
+				router_info.invalidLoadMessage = "Invalid room entered"
+			}
 		}
+		console.log(router_info.invalidLoadMessage)
+	  	testsa()
 		// Invalid floor or room entered (number not entered) NOT NEEDED ANYMORE?
 		// if (global.bldg === "" && (router.currentRoute.value.name === "buildingAndFloor" || router.currentRoute.value.name === "buildingAndRoom")) {
 		// 	console.log("Incorrect floor or room")
