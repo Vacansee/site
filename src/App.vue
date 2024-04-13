@@ -39,6 +39,8 @@ import {router_info} from "@/router";
 </template>
 
 <script>
+import {router_info} from "@/router";
+
 export default {
   data() {
     return {
@@ -63,6 +65,9 @@ export default {
           document.getElementById("header").style.opacity = "0";
         else
           document.getElementById("header").style.opacity = "1";
+        if (router_info.invalidLoadMessage !== "") {
+          this.$showToast({title: router_info.invalidLoadMessage})
+        }
       }
     }
   },

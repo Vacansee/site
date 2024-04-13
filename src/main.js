@@ -22,6 +22,7 @@ import router from "./router";
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
 import './assets/themes/theme.css';
+import * as path from "path";
 
 const global = reactive({ // The global reactive object!
 	// Any changes to its members will trigger reactivity in components that 
@@ -73,6 +74,9 @@ Promise.all([
 	  	// Error checking for invalid URL paths entered by user
 	  	// console.log(global.bldg, global.floor, global.room)
 	  	// FINISH COMMENTS / DOCUMENTATION
+	  	// console.log(router.currentRoute.value.fullPath)
+	  	// console.log(router.currentRoute.value.fullPath.split('/').length-1)
+	  	console.log(global.bldg, global.floor, global.room)
 	  	if (global.bldg === "" && router.currentRoute.value.name !== "home") {
 			console.log("Invalid URL format")
 			global.bldg = ""
@@ -85,11 +89,15 @@ Promise.all([
 			// Invalid building entered
 	  		if (global.data[global.bldg] === undefined) {
 				console.log("Incorrect building")
-	  			global.bldg = ""
-	  			global.floor = null
-	  			global.room = ""
-	  			router.push({ name: 'home' })
+				global.bldg = ""
+				global.floor = null
+				global.room = ""
+				router.push({name: 'home'})
 				router_info.invalidLoadMessage = "Invalid building entered"
+			}
+			else if (router.currentRoute.value.fullPath.split('/').length === 3) {
+				global.floor = global.data[global.bldg].meta.floors[1]
+				router.push({ name: 'buildingAndFloor', params: { building: global.bldg, floor: global.floor } })
 			}
 			// Invalid floor entered
 			else if (global.floor > global.data[global.bldg].meta.floors[0]) {
@@ -108,7 +116,6 @@ Promise.all([
 			}
 		}
 		console.log(router_info.invalidLoadMessage)
-	  	testsa()
 		// Invalid floor or room entered (number not entered) NOT NEEDED ANYMORE?
 		// if (global.bldg === "" && (router.currentRoute.value.name === "buildingAndFloor" || router.currentRoute.value.name === "buildingAndRoom")) {
 		// 	console.log("Incorrect floor or room")
