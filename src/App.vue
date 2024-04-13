@@ -52,8 +52,9 @@ export default {
       ANGLE: 0.0,
       // top left corner: 42.733115, -73.683526 with (65, 478)
       // bottom right corner 42.724859, -73.673789 with (970, 1205)
-      XSCALE: -(42.733115-42.724859)*(65-970),
-      YSCALE: -(-73.683526- -73.673789)*(478-1205),
+      // CURRENT NOT WORKING 
+      XSCALE: (65-970)/(42.733115-42.724859),
+      YSCALE: (478-1205)/(-73.683526- -73.673789),
     }
   },
   inject: ["global"],
@@ -131,10 +132,8 @@ export default {
     },
     convert(lon, lat) {
       const pos = [];
-      console.log(this.XSCALE);
-      console.log(this.YSCALE);
-      pos[0] = this.XSCALE * lon * Math.cos(this.ANGLE)+68;
-      pos[1] = this.YSCALE * lat * Math.sin(this.ANGLE)+478;
+      pos[0] = -(this.XSCALE * (lat- -73.683526) * Math.sin(this.ANGLE) ) +295//+282;
+      pos[1] = -(this.YSCALE * (lon- 42.733115) / Math.cos(this.ANGLE) ) +527//+575;
       return pos;
     },
     calcPosition(pos) {
@@ -205,10 +204,12 @@ export default {
       console.log(`More or less ${crd.accuracy} meters.`);
       // this.locationCheck(svgX,svgY,crd.accuracy);
 
-      // harcode attempt with 42.730772, -73.680271
-      // (on an intersection of a path)
+      // harcode attempts
+      // 42.730772, -73.680271 (353.6582396771582, 704.3499788833127) +282, +575;
+      // 42.729179, -73.681097 (325.7729229420523, 872.9297980730382) +295, +527;
+      // 42.730779, -73.677217
       
-      const convertedPos = this.convert(42.730772, -73.680271)//this.convert(crd.longitude, crd.latitude);
+      const convertedPos = this.convert(42.729179, -73.681097)//this.convert(crd.longitude, crd.latitude);
       // convertedPos[0] = svgX;
       // convertedPos[1] = svgY;
       this.global.userCoords = [convertedPos[0], convertedPos[1]];
