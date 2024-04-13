@@ -119,7 +119,24 @@ function checkActive() {
 				}
 			}
 		}
-
+		
+		// Determine whether the building is open
+		let access = global.data[b].meta.access, times = "",
+		[day, time] = global.time.split(":")
+		if (day >= 1 && day <= 4) { times = access[1] } // Mon-Thu
+		else if (day == 5) { times = access[2] } // Fri
+		else if (day == 6) { times = access[3] } // Sat
+		else if (day == 0) { times = access[0] } // Sun
+		if (times) {
+			let [open, close] = times.split("-")
+			let hours = [
+				Moment(open, 'HHmm').format('hA'),
+				Moment(close, 'HHmm').format('hA')
+			]
+			if (time > open && time < close) { bldg.meta.open = hours }
+		}
+		else { bldg.meta.open = false }
+		
 		if ("dining" in bldg.meta) {
 			if (isNaN(Object.keys(bldg.meta.dining)[0][0]))
 				for (let d in bldg.meta.dining) checkOpen(bldg.meta.dining[d])
