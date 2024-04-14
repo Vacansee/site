@@ -2,17 +2,18 @@
 import moment from 'moment-timezone'
 import { average } from 'color.js'
 import InfoIcon from '@/assets/icons/info.svg?component'
+import CopyIcon from '@/assets/icons/copy.svg?component'
 import tinycolor from "tinycolor2"
-
 </script>
 
 <template>
     <!-- HTML for the popup -->
     <div id="popup">
+        <CopyIcon id="copy" @click="copyURL"/>
         <div id="breadcrumbs">
             {{ global.bldg.replace(/_/g, ' ') }}
-            <span v-if="global.bldg"> > Floor {{ global.floor }}</span>
-            <span v-if="!noneSelected()"> > Room {{ global.room }}</span>
+            <span v-if="global.bldg"> <span id="slash">/</span> Floor {{ global.floor }}</span>
+            <span v-if="!noneSelected()"> <span id="slash"> /</span> Room {{ global.room }}</span>
         </div>
         <div id="fadeout"></div>
         <div v-if="global.bldg && getBldg()" class="body">
@@ -247,6 +248,10 @@ export default {
             let hist = this.getBldg().meta.hist
             if (hist === "") hist = this.getBldg().meta.name.toLowerCase().replace(/ /g, "-")
             return hist // for case: false
+        },
+        copyURL() {
+          navigator.clipboard.writeText(window.location.href)
+          this.$showToast({type: 'info', title: 'Link to location copied', lasts: 1000})
         }
     }
 }
@@ -277,12 +282,16 @@ export default {
 
 #breadcrumbs {
     padding: 10px 0px 0px 20px;
-    color: rgb(0, 0, 0);
     font-size: x-large;
     font-weight: 600;
-    height: 50px;
+    height: 45px;
     border-radius: 12px 12px 0 0;
     background-color: white;
+}
+
+#slash {
+    font-weight: 500;
+    color: #000000a0;
 }
 
 #fadeout {
@@ -305,7 +314,7 @@ export default {
 
 .body {
     position: absolute;
-    top: 50px;
+    top: 45px;
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -407,6 +416,20 @@ tr:nth-child(even) {
     top: 1.5rem;
     left: 1.5rem;
     height: 25px;
+}
+
+#copy {
+    fill: black;
+    width: 28px;
+    z-index: 2;
+    position: absolute;
+    top: 12px;
+    right: 22px;
+    transition: all 0.2s;
+}
+
+#copy:hover {
+    fill: #000000b0;
 }
 
 li {
