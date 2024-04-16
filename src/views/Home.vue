@@ -76,6 +76,22 @@ export default {
     }
   },
   mounted() {
+  //  window.addEventListener('touchstart', () => {this.getInitMouse})
+    window.addEventListener('touchend', () => {this.clicked = false, this.totalDisplacementX += this.curMoveX,  this.totalDisplacementY += this.curMoveY, this.moveInBounds()})
+    window.addEventListener('touchmove', (e) => {
+    if (!this.clicked) {
+      this.initMouseX = e.touches[0].pageX
+      this.initMouseY = e.touches[0].pageY
+      this.curMoveX = 0
+      this.curMoveY = 0
+      this.clicked = true
+      console.log("bing")
+    }
+    console.log(this.clicked)
+    this.mouseX = e.touches[0].pageX
+    this.mouseY = e.touches[0].pageY
+    this.moveScreen()
+    })
     // addEventListeners allow the file to call a function when 
     // an action occurs
     window.addEventListener("mousemove", (window) => {
@@ -219,6 +235,7 @@ export default {
       this.curMoveX = 0
       this.curMoveY = 0
       this.clicked = true
+      console.log("bing")
     },
     // Make the name tag pop up
     nameTagAppear(b) {
