@@ -1,6 +1,9 @@
 <script setup>
 import moment from 'moment-timezone'
 import { average } from 'color.js'
+import router from '../../router';
+import Tag from 'primevue/tag';
+
 import InfoIcon from '@/assets/icons/info.svg?component'
 import CopyIcon from '@/assets/icons/copy.svg?component'
 import tinycolor from "tinycolor2"
