@@ -1,15 +1,16 @@
 <!-- This will be a component of MapItem at some point (might need its own manager)-->
 
 <!-- HTML scripts -->
-<!-- <template>
+<template>
   <svg viewBox="0 0 1024 1706" id="map" filter="url(#blur)">
-  <foreignObject v-for="pin in pins" style="pointer-events: none;" :x="pin.x" :y="pin.y" width="100%" height="100%">
-      <div class = "map-overlays-icons">
-        <p class="pin" v-if=pin.pinned style=" position:absolute; color:rgb(255, 255, 255); font-weight:1000;"><span class="map-overlays-icons">📌</span></p>
-      </div>
-    </foreignObject>
+    <!-- Loops through the map and check if pinned == true, if true we add the pin on the map-->
+    <!-- <foreignObject v-for="[key,value] in pins" style="pointer-events: none;" :x="value.x" :y="value.y" width="100%" height="100%">
+          <div class = "map-overlays-icons">
+            <p class="pin" v-if=value.pinned style=" position:absolute; color:rgb(255, 255, 255); font-weight:1000;"><span class="map-overlays-icons">📌</span></p>
+          </div>
+        </foreignObject> -->
     </svg>
-</template>  -->
+</template> 
 
 <!-- JS scripts -->
 <script>
