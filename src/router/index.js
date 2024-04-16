@@ -81,7 +81,17 @@ router.beforeResolve((to, from, next) => {
 // Sets global variables to user inputted URL path values
 export function Routing(mainGlobal) {
   if (router_info.pathBuilding) {
-    mainGlobal.bldg = router_info.pathBuilding.toUpperCase()
+    mainGlobal.bldg = router_info.pathBuilding.toUpperCase();
+    if (mainGlobal.bldg != "DCC" && mainGlobal.bldg != "VCC"
+        && mainGlobal.bldg != "JEC" && mainGlobal.bldg != "JROWL"
+        && mainGlobal.bldg != "CBIS" && mainGlobal.bldg != "MRC"
+        && mainGlobal.bldg != "EMPAC" && mainGlobal.bldg != "RSDH" 
+        && mainGlobal.bldg != "EMPAC") {
+      mainGlobal.bldg = router_info.pathBuilding.substring(0, 1).toUpperCase() + router_info.pathBuilding.substring(1, mainGlobal.bldg.length)
+    } else {
+
+    }
+    if (mainGlobal.bldg.toUpperCase() == "'87_GYM") mainGlobal.bldg = "'87_Gym"; 
     mainGlobal.floor = router_info.pathFloor
     mainGlobal.room = router_info.pathRoom
     router_info.checkValues = true
