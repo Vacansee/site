@@ -19,7 +19,7 @@ export const router_info = reactive({
   pathFloor: null,
   pathRoom: '',
   firstLoad: true,
-  invalidLoadMessage: ""
+  checkValues: false
 })
 
 const router = createRouter({
@@ -84,6 +84,7 @@ export function Routing(mainGlobal) {
     mainGlobal.bldg = router_info.pathBuilding.toUpperCase()
     mainGlobal.floor = router_info.pathFloor
     mainGlobal.room = router_info.pathRoom
+    router_info.checkValues = true
   }
 }
 

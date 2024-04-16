@@ -13,8 +13,6 @@ import router from '../../router';
   
 <script>
 
-import {router_info} from "@/router";
-
 const getFloorSVG = async (floorName) => {
   try {
     const module = await import(`../../assets/floors/${floorName}.svg`)

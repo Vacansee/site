@@ -36,7 +36,8 @@ const global = reactive({ // The global reactive object!
 	time: Moment.tz('America/New_York').format('e:HHmm'),
 	// time: Moment.tz('2023-11-29 11:55', 'America/New_York').format('e:HHmm'), // Test time
 	firstCalc: false,
-	sFocus: false
+	sFocus: false,
+	invalidLoadMessage: ""
 })
 
 // On page load, fetch building/room and search data from Vacansee/data:
@@ -70,63 +71,54 @@ Promise.all([
 		console.log('Data loaded!')
 		checkActive()
 		global.firstCalc = true
+	  	// Update global variables with URL path
 	  	Routing(global)
-	  	// Error checking for invalid URL paths entered by user
-	  	// console.log(global.bldg, global.floor, global.room)
-	  	// FINISH COMMENTS / DOCUMENTATION
-	  	// console.log(router.currentRoute.value.fullPath)
-	  	// console.log(router.currentRoute.value.fullPath.split('/').length-1)
-	  	console.log(global.bldg, global.floor, global.room)
-	  	if (global.bldg === "" && router.currentRoute.value.name !== "home") {
-			console.log("Invalid URL format")
-			global.bldg = ""
-			global.floor = null
-			global.room = ""
-			router.push({ name: 'home' })
-			router_info.invalidLoadMessage = "Invalid URL format"
-		}
-	  	else if (global.bldg !== "") {
-			// Invalid building entered
-	  		if (global.data[global.bldg] === undefined) {
-				console.log("Incorrect building")
+	  	// Check user inputted values
+	  	if (router_info.checkValues) {
+			// Checks URL format
+			if (global.bldg === "" && router.currentRoute.value.name !== "home") {
+				console.log("Not a valid URL format")
 				global.bldg = ""
 				global.floor = null
 				global.room = ""
+				global.invalidLoadMessage = "Not a valid URL format"
 				router.push({name: 'home'})
-				router_info.invalidLoadMessage = "Invalid building entered"
+			} else if (global.bldg !== "") {
+				// Checks inputted building
+				if (global.data[global.bldg] === undefined) {
+					console.log("Invalid URL: not a valid building")
+					global.bldg = ""
+					global.floor = null
+					global.room = ""
+					global.invalidLoadMessage = "Not a valid building"
+				// Sets the floor if only a building is entered
+				}
+				else if (router.currentRoute.value.fullPath.split('/').length === 3) {
+					global.floor = global.data[global.bldg].meta.floors[1]
+					router.push({name: 'buildingAndFloor', params: {building: global.bldg, floor: global.floor}})
+				}
+				// Checks inputted floor
+				else if (global.floor > global.data[global.bldg].meta.floors[0]) {
+					console.log("Invalid URL: not a valid floor")
+					global.floor = global.data[global.bldg].meta.floors[1]
+					global.invalidLoadMessage = "Not a valid floor"
+					router.push({name: 'buildingAndFloor', params: {building: global.bldg, floor: global.floor}})
+				}
+				// Checks inputted room
+				else if (global.room !== "" && !global.data[global.bldg].hasOwnProperty(global.room)) {
+					console.log("Invalid URL: not a valid room")
+					global.floor = global.data[global.bldg].meta.floors[1]
+					global.room = ""
+					global.invalidLoadMessage = "Not a valid room"
+					router.push({name: 'buildingAndFloor', params: {building: global.bldg, floor: global.floor}})
+				}
 			}
-			else if (router.currentRoute.value.fullPath.split('/').length === 3) {
-				global.floor = global.data[global.bldg].meta.floors[1]
-				router.push({ name: 'buildingAndFloor', params: { building: global.bldg, floor: global.floor } })
+			// Updates URL Path
+			if (global.bldg === "" && router.currentRoute.value.name !== "home") {
+				router.push({name: 'home'})
 			}
-			// Invalid floor entered
-			else if (global.floor > global.data[global.bldg].meta.floors[0]) {
-				console.log("Too high of a floor")
-				global.floor = global.data[global.bldg].meta.floors[1]
-				router.push({ name: 'buildingAndFloor', params: { building: global.bldg, floor: global.floor } })
-				router_info.invalidLoadMessage = "Invalid floor entered"
-			}
-	  		// Invalid room entered
-	  		else if (global.room !== "" && !global.data[global.bldg].hasOwnProperty(global.room)) {
-				console.log("Incorrect room")
-				global.floor = global.data[global.bldg].meta.floors[1]
-				global.room = ""
-				router.push({ name: 'buildingAndFloor', params: { building: global.bldg, floor: global.floor } })
-				router_info.invalidLoadMessage = "Invalid room entered"
-			}
+			router_info.checkValues = false
 		}
-		console.log(router_info.invalidLoadMessage)
-		// Invalid floor or room entered (number not entered) NOT NEEDED ANYMORE?
-		// if (global.bldg === "" && (router.currentRoute.value.name === "buildingAndFloor" || router.currentRoute.value.name === "buildingAndRoom")) {
-		// 	console.log("Incorrect floor or room")
-		// 	global.bldg = ""
-		// 	global.floor = null
-		// 	global.room = ""
-		// 	router.push({ name: 'home' })
-		// }
-		// console.log("Entry", global.data[global.bldg].meta.floors[1])
-	    // console.log("Num Floors", global.data[global.bldg].meta.floors[0])
-	  	// toastNotification()
 	})
   .catch(error => { this.$showToast({title: 'Failed to load data', body: error}) })
 

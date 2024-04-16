@@ -8,7 +8,6 @@ import AutoComplete from 'primevue/autocomplete'
 import Button from "primevue/button"
 import Toast from 'primevue/toast'
 import MapItem from '../src/components/home/MapItem.vue';
-import {router_info} from "@/router";
 </script>
 
 <template>
@@ -39,6 +38,7 @@ import {router_info} from "@/router";
 </template>
 
 <script>
+
 import {router_info} from "@/router";
 
 export default {
@@ -65,8 +65,14 @@ export default {
           document.getElementById("header").style.opacity = "0";
         else
           document.getElementById("header").style.opacity = "1";
-        if (router_info.invalidLoadMessage !== "") {
-          this.$showToast({title: router_info.invalidLoadMessage})
+      }
+    },
+    'global.invalidLoadMessage' : {
+      handler() {
+        // Tells the user when they entered an invalid URL path
+        if (this.global.invalidLoadMessage !== "") {
+          this.$showToast({type: 'info', title: 'Invalid URL', body: this.global.invalidLoadMessage, lasts: 3000})
+          this.global.invalidLoadMessage = ""
         }
       }
     }
