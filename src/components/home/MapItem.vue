@@ -1,7 +1,8 @@
 <script setup>
 import tinycolor from "tinycolor2";
 import { ref } from "vue";
-import  Pin from './Pin.vue'
+import Pin from "./Pin.vue";
+
 </script>
 <template>
   <!-- data for every building -->
@@ -218,7 +219,9 @@ import  Pin from './Pin.vue'
         <path id="Union"
           d="m626.5 768.2 3.2.3 2.1.1-.1 10 9.1.2 5.5.1v1.9l.6 1.6 1.2 2 1.1 1.1 1.3.8 1.3.6 10.5.3 1.8-.2 2-1.1 1.5-1.5 1.2-1.8.7-2.3-.2-8.4 4.7.2h1.6l13.3.7.2-56.2-40.5-1.7-17.2-.7-.5 7.8H628l-1.6 46.2Z" />
         <!-- PIN PLACEHOLDER -->
-        <foreignObject v-for="pin in Pin.pins" style="pointer-events: none;" :x="pin.x" :y="pin.y" width="100%" height="100%">
+        <foreignObject v-for="value in Pin.pins" :key="value">
+          <div style="pointer-events: none;" :x="value.x" :y="value.y" width="100%" height="100%">
+          </div>
           <div class = "map-overlays-icons">
             <p class="pin" v-if=pin.pinned style=" position:absolute; color:rgb(255, 255, 255); font-weight:1000;"><span class="map-overlays-icons">📌</span></p>
           </div>
@@ -246,6 +249,15 @@ import  Pin from './Pin.vue'
 
 <script>
 export default {
+  components:{Pin},
+    // General local variables
+    data() {
+    return {
+      threshold: 1,
+      doResize: "",
+      zoom: 0,
+    }
+  },
   // Adds use of global variables
   inject: ["global"],
   props: ['bldgSVG'],
@@ -268,16 +280,7 @@ export default {
           this.applyBuildingColors();
         }
       }
-    }
-  },
-  // General local variables
-  data() {
-    return {
-      threshold: 1,
-      doResize: "",
-      zoom: 0,
-
-    }
+    },
   },
   updated() {
     this.$nextTick(() => {
