@@ -8,6 +8,7 @@ import AutoComplete from 'primevue/autocomplete'
 import Button from "primevue/button"
 import Toast from 'primevue/toast'
 import MapItem from '../src/components/home/MapItem.vue';
+import router from "@/router";
 </script>
 
 <template>
@@ -38,8 +39,6 @@ import MapItem from '../src/components/home/MapItem.vue';
 </template>
 
 <script>
-
-import router from "@/router";
 
 export default {
   data() {
