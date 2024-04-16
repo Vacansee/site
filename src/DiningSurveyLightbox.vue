@@ -8,7 +8,7 @@
           :key="index" 
           class="tab" 
           :class="{ active: activeTab === index }" 
-          @click="activeTab = index">
+          @click="handleTabClick(index)">
           {{ option.name }}
         </div>
       </div>
@@ -17,19 +17,22 @@
       <div class="tab-content">
         <div v-for="(option, index) in diningOptions" :key="index" v-show="activeTab === index">
           <h3>{{ option.name }}</h3>
-          <!-- Handle sub-options for complex entries like Student Union -->
           <div v-if="option.subOptions" class="scrollable-content">
-            <div v-for="(sub, subKey) in option.subOptions" :key="subKey">
+            <div v-for="(sub, subKey) in option.subOptions" :key="subKey"
+                 class="sub-tab"
+                 :class="{ active: activeSubTab[option.name] === subKey }"
+                 @click.stop="handleSubTabClick(option.name, subKey)">
               <h4>{{ subKey }}</h4>
-              <p>Hours: {{ sub.times.join(', ') }}</p>
-              <!-- Ensure the URL is prefixed with https if not already included -->
-              <a :href="sub.url.includes('http') ? sub.url : `https://${sub.url}`" target="_blank" rel="noopener noreferrer">More details</a>
+              <p v-show="activeSubTab[option.name] === subKey">Hours: {{ sub.times.join(', ') }}</p>
+              <a v-show="activeSubTab[option.name] === subKey"
+                 :href="sub.url.includes('http') ? sub.url : `https://${sub.url}`" 
+                 target="_blank" rel="noopener noreferrer">More details</a>
             </div>
           </div>
-          <!-- Handle simple dining options -->
           <div v-else>
             <p>Hours: {{ option.times.join(', ') }}</p>
-            <a :href="option.url.includes('http') ? option.url : `https://${option.url}`" target="_blank" rel="noopener noreferrer">More details</a>
+            <a :href="option.url.includes('http') ? option.url : `https://${option.url}`" 
+               target="_blank" rel="noopener noreferrer">More details</a>
           </div>
         </div>
       </div>
@@ -39,13 +42,13 @@
   </div>
 </template>
 
-
 <script>
 export default {
   data() {
     return {
       visible: false,
       activeTab: 0, // Default to the first tab
+      activeSubTab: {},
       diningOptions: [
         { name: "DCC Cafe", times: ["07:30-18:00"], url: "https://rpi.sodexomyway.com/dining-near-me/dcc-cafe" },
         { name: "Evelyn's Cafe", times: ["11:00-14:00"], url: "https://rpi.sodexomyway.com/dining-near-me/evelyns_cafe" },
@@ -76,6 +79,16 @@ export default {
     },
     close() {
       this.visible = false;
+      this.activeSubTab = {};
+    },
+    handleTabClick(index) {
+      this.activeTab = index;
+      if (!this.diningOptions[index].subOptions) {
+        this.activeSubTab = {}; // Reset sub-tabs if not in a sub-option tab
+      }
+    },
+    handleSubTabClick(parentName, subKey) {
+      this.activeSubTab[parentName] = this.activeSubTab[parentName] === subKey ? null : subKey;
     },
   },
 };
@@ -125,5 +138,15 @@ export default {
 .scrollable-content {
   max-height: 300px;
   overflow-y: auto;
+}
+.sub-tab {
+  cursor: pointer;
+  display: block; 
+}
+.sub-tab h4 {
+  font-weight: bold; 
+}
+.sub-tab p {
+  font-weight: normal; 
 }
 </style>

@@ -21,7 +21,7 @@ import DiningSurveyLightbox from './DiningSurveyLightbox.vue'
       </div>
 
       <div id="right-nav">
-        <a href="#" @click.prevent="openDiningSurvey"><Button class="nav-btn" aria-label="Dining" >
+        <a href="#" @click.prevent="openDiningSurvey"><Button class="nav-btn dining" aria-label="Dining" >
             <DiningIcon height="25" width="25"/>
         </Button></a>
         <a href="https://forms.gle/Tu5xSSjK1MkZDXK69" target="_blank" rel="noopener noreferrer"><Button class="nav-btn" aria-label="Feedback" >
@@ -159,10 +159,12 @@ header {
   width: 3.25rem;
   height: 3.25rem;
   justify-content: center;
+  align-items: center;
   background-color: var(--unusedfill);
   border: 2px solid var(--buildbord);
   box-shadow: 0px 5px 25px rgba(0, 10, 20, 0.08);
   pointer-events: all;
+  padding: 0; 
 }
 
 .nav-btn:hover,
