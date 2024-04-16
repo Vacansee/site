@@ -135,10 +135,10 @@ export default {
     },
 
     checkDark2() {
-    console.log("this works");
+
     this.global.darkMode = !this.global.darkMode;
     if (this.global.darkMode) {
-      console.log("1");
+      // console.log("1");
       document.documentElement.style.setProperty('--background', '#171918');
       document.documentElement.style.setProperty('--carroad', '#232624');
       document.documentElement.style.setProperty('--walkpath', '#2e322f');
@@ -147,11 +147,11 @@ export default {
       document.documentElement.style.setProperty('--buildfill', '#2d322e');
       document.documentElement.style.setProperty('--buildbord', '#505a52');
       document.documentElement.style.setProperty('--roomfill', '#5d685f');
-      document.documentElement.style.setProperty('--unusedfill', '#141614');
+      document.documentElement.style.setProperty('--unusedfill', '#3fa053');
 
     }
     else if (!this.global.darkMode) {
-      console.log("2");
+      // console.log("2");
       document.documentElement.style.setProperty('--background', '#ffffff');
       document.documentElement.style.setProperty('--carroad', '#d4e5e2');
       document.documentElement.style.setProperty('--walkpath', '#a2c3c3');
