@@ -411,7 +411,7 @@ export default {
   left: 50%;
   top: 50%;
   will-change: transform;
-  transform: translate(-50%, -50%) scale(1) scaleX(1) scaleY(1) rotate(0) skew(0deg, 0deg);
+  transform: translate(-1.5vw, -4.95vh) scale(1) scaleX(1) scaleY(1) rotate(0) skew(0deg, 0deg);
   justify-content: center;
   align-items: center;
   transition: 800ms ease all;
