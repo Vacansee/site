@@ -19,8 +19,8 @@ import Toast from 'primevue/toast'
       </div>
 
       <div id="right-nav">
-        <a><Button class="nav-btn"  @click="()=>{this.global.darkMode = !this.global.darkMode; }">DARK MODE</Button></a>
-
+        <!--<a><Button class="nav-btn"  @click="()=>{this.global.darkMode = !this.global.darkMode; }">DARK MODE</Button></a>-->
+        <a><Button class="nav-btn"  @click="checkDark2()">DARK MODE</Button></a>
         <a href="https://forms.gle/Tu5xSSjK1MkZDXK69" target="_blank" rel="noopener noreferrer"><Button class="nav-btn" aria-label="Feedback" >
             <PollIcon height="25" width="25"/>
         </Button></a>
@@ -132,8 +132,41 @@ export default {
       this.global.floor = parseInt(room[0])
       this.global.room = room, this.global.bldg = bldg, this.selection = ""
       console.log(`Room w/ CRN #${CRN} selected`)
+    },
+
+    checkDark2() {
+    console.log("this works");
+    this.global.darkMode = !this.global.darkMode;
+    if (this.global.darkMode) {
+      console.log("1");
+      document.documentElement.style.setProperty('--background', '#171918');
+      document.documentElement.style.setProperty('--carroad', '#232624');
+      document.documentElement.style.setProperty('--walkpath', '#2e322f');
+      document.documentElement.style.setProperty('--softborder', '#2e322f');
+      document.documentElement.style.setProperty('--hardborder', '#3d423e');
+      document.documentElement.style.setProperty('--buildfill', '#2d322e');
+      document.documentElement.style.setProperty('--buildbord', '#505a52');
+      document.documentElement.style.setProperty('--roomfill', '#5d685f');
+      document.documentElement.style.setProperty('--unusedfill', '#141614');
+
     }
+    else if (!this.global.darkMode) {
+      console.log("2");
+      document.documentElement.style.setProperty('--background', '#ffffff');
+      document.documentElement.style.setProperty('--carroad', '#d4e5e2');
+      document.documentElement.style.setProperty('--walkpath', '#a2c3c3');
+      document.documentElement.style.setProperty('--softborder', '#d3d5dc');
+      document.documentElement.style.setProperty('--hardborder', '#869395');
+      document.documentElement.style.setProperty('--buildfill', '#d4e5e2');
+      document.documentElement.style.setProperty('--buildbord', '#7cacab');
+      document.documentElement.style.setProperty('--roomfill', '#d5ebe7');
+      document.documentElement.style.setProperty('--unusedfill', '#bbd3cf');
+    }
+    return
   }
+  }
+
+  
 }
 </script>
 <style scoped>
