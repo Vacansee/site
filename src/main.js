@@ -82,7 +82,6 @@ Promise.all([
 				global.floor = null
 				global.room = ""
 				global.invalidLoadMessage = "Not a valid URL format"
-				router.push({name: 'home'})
 			} else if (global.bldg !== "") {
 				// Checks inputted building
 				if (global.data[global.bldg] === undefined) {
@@ -91,8 +90,9 @@ Promise.all([
 					global.floor = null
 					global.room = ""
 					global.invalidLoadMessage = "Not a valid building"
-				// Sets the floor if only a building is entered
+					router.push({name: 'home'})
 				}
+				// Sets the floor if only a building is entered (not an error)
 				else if (router.currentRoute.value.fullPath.split('/').length === 3) {
 					global.floor = global.data[global.bldg].meta.floors[1]
 					router.push({name: 'buildingAndFloor', params: {building: global.bldg, floor: global.floor}})
@@ -112,10 +112,6 @@ Promise.all([
 					global.invalidLoadMessage = "Not a valid room"
 					router.push({name: 'buildingAndFloor', params: {building: global.bldg, floor: global.floor}})
 				}
-			}
-			// Updates URL Path
-			if (global.bldg === "" && router.currentRoute.value.name !== "home") {
-				router.push({name: 'home'})
 			}
 			router_info.checkValues = false
 		}

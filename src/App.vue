@@ -39,7 +39,7 @@ import MapItem from '../src/components/home/MapItem.vue';
 
 <script>
 
-import {router_info} from "@/router";
+import router from "@/router";
 
 export default {
   data() {
@@ -61,10 +61,12 @@ export default {
       handler() {
         this.$clearToasts()
         // Only shows header when a building is not selected
-        if (this.global.bldg)
-          document.getElementById("header").style.opacity = "0";
-        else
-          document.getElementById("header").style.opacity = "1";
+        if (this.global.bldg) {
+          document.getElementById("header").style.opacity = "0"
+        }
+        else {
+          document.getElementById("header").style.opacity = "1"
+        }
       }
     },
     'global.invalidLoadMessage' : {
