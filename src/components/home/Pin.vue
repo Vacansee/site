@@ -17,6 +17,7 @@ export default {
     // local variables
     data(){
     return {
+      //Location of all the pins and the buildings associated with it
       pins:new Map([
       ["DCC",{x:460, y:820, pinned: true}], ["Low", {x:498, y:820, pinned: false}], ["JEC", {x: 370, y: 800, pinned: false}], ["JROWL", {x:384, y:880, pinned: false}], ["CBIS", {x: 520, y:915, pinned: false}], ["Academy",{x:540, y: 996, pinned: false}],["Robinson", {x:635, y:925, pinned: false}],["Armory", {x:660, y:872, pinned: false}],["Mueller", {x:660, y:835, pinned: false}], 
       ["Commons", {x:865, y:855, pinned: false}], ["Union", {x:650, y:715, pinned: false}], ["Sage Dinning", {x:530, y:750, pinned: false}],["'87 Gym", {x:475, y: 660, pinned: false}], ["Ricketts", {x:395, y:655, pinned: false}], ["Troy", {x:330, y:655, pinned: false}],["Sage", {x:245, y:685, pinned: false}], ["Walker", {x:175, y: 700, pinned: false}], ["Pittsburgh", {x:110, y: 680, pinned: false}], 
@@ -24,10 +25,6 @@ export default {
       ["Empire", {x:255, y:955, pinned: false}], ["Cogswell", {x:325, y:962, pinned: false}]
       ])
     };
-  },
-  methods: {
-    getPins(){return this.pins;
-    }
   },
   // give access to global variables
   inject: ["global"],
@@ -57,7 +54,9 @@ export default {
 
   },
   methods: {
+    getPins(){return this.pins},
     getBldg() { return this.global.data[this.global.bldg] },
+    //buildings will be the building the search bar return and then plcae a pin on it
     addPin(buildings){
       value = this.pins.get(buildings);
       value.pinned = true;
