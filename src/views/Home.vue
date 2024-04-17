@@ -163,12 +163,9 @@ export default {
 
         mask.style.opacity = 0.65
         mask.style.pointerEvents = "inherit"
-        let moveX = 0.8
-        let moveY = 0.3
-        mapBox.style.transform = `scale(3) translate(${(window.innerWidth / 2) * moveX - boxCenterX}px, ${(window.innerHeight / 2) * moveY - boxCenterY - 50}px)`
-   //     mapBox.style.transform = `scale(5) translate(${window.innerWidth / 2.5 - boxCenterX}px, ${window.innerHeight / 7 - boxCenterY}px)`
+        mapBox.style.transform = `scale(3) translate(${window.innerWidth / 2.5 - boxCenterX}px, ${window.innerHeight / 7 - boxCenterY}px)`
         // Bring the popup to 0,0
-        popup.style.transition = "transform .5s"
+        popup.style.transition = "transform .25s"
         popup.style.transform = "translateY(0vh)"
         popup.style.minWidth = "400px"
       }
@@ -181,7 +178,7 @@ export default {
         mapBox.style.transform = "scale(1) translate(-50%, -50%)"
         mask.style.pointerEvents = "none"
         mask.style.opacity = 0
-        popup.style.transition = "transform .5s"
+        popup.style.transition = "transform .25s"
         popup.style.minWidth = "unset"
         // Landscape mode
         if (this.global.aspectRatio <= this.global.flipScreen) {

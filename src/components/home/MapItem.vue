@@ -246,7 +246,7 @@ export default {
       handler() {
         if (this.bldgSVG) { // selected
           this.bringToFront(this.bldgSVG);
-          this.$refs.blurRef.setAttribute('stdDeviation', 3.456);
+          this.$refs.blurRef.setAttribute('stdDeviation', 8);
         } else { // unselected
           setTimeout(this.windowEventHandler, 800);
           this.$refs.blurRef.setAttribute('stdDeviation', 0);
@@ -414,7 +414,6 @@ export default {
   transform: translate(-50%, -50%) scale(1) scaleX(1) scaleY(1) rotate(0) skew(0deg, 0deg);
   justify-content: center;
   align-items: center;
-  transition: 800ms ease all;
 }
 
 #map {
@@ -422,7 +421,7 @@ export default {
   opacity: 0;
   transition: width linear 2s, height linear 2s, opacity .8s;
   width: 1080px;
-  /* Band aid scaling fix for svg devices */
+  /* Band-aid scaling fix for WebKit browsers */
   transform: scale(0.04629629629);
   will-change: transform;
 }
