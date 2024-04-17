@@ -68,9 +68,12 @@ export default {
     'global.bldg': {
       handler() {
         if ([...Object.keys(this.global.data)].includes(this.global.bldg)) {
+          this.buildingSelected = true;
           for (const b of buildings.children) {
             if (b.id === this.global.bldg) this.buildingSelect(b)
           }
+        } else {
+          this.buildingSelected = false;
         }
       }
     }
@@ -225,7 +228,7 @@ export default {
         }
         this.totalDisplacementX = absX - adjustedX/this.zoom*40;
         this.totalDisplacementY = absY - adjustedY/this.zoom*40;
-        mapBox.style.transition = "75ms ease all"
+        mapBox.style.transition = "800ms ease all"
         this.moveInBounds();
       }
     },
