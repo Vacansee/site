@@ -161,6 +161,8 @@ export default {
       document.documentElement.style.setProperty('--buildbord', '#505a52');
       document.documentElement.style.setProperty('--roomfill', '#5d685f');
       document.documentElement.style.setProperty('--unusedfill', '#3fa053');
+      // document.documentElement.style.setProperty('--softborder', '#3fa053');
+      document.documentElement.style.setProperty('--color-background-mute', '#3fa053');
       const paths = document.querySelectorAll('.logo path');
         paths.forEach(path => {
           path.style.fill = '#40c269';

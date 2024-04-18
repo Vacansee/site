@@ -419,8 +419,8 @@ tr:nth-child(even) {
     border-radius: 10px;
     border: 1px solid var(--softborder);
     box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.05);
-    background-color: white;
     position: relative;
+    background-color: var(--background);
 }
 
 #stats {
