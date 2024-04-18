@@ -136,7 +136,8 @@ export default {
       popup.style.transform = "TranslateY(50vh)"
     }
     // Allow for the scroll wheel to zoom the map
-    window.addEventListener("wheel", this.onMouseScroll);
+    // WITHHELD FOR NOW
+   // window.addEventListener("wheel", this.onMouseScroll);
   },
   methods: {
     runFind() {
@@ -192,7 +193,7 @@ export default {
         mapBox.style.transform = `scale(${1*this.zoom/40}) translate(${xPos}px, ${yPos}px)`
       }
     },
-    onMouseScroll({deltaX,deltaY}) {
+ /*   onMouseScroll({deltaX,deltaY}) {
       // If you arent selected on a building
       if (!this.global.sFocus && !this.global.bldg){
         let dirwheel = 0;
@@ -213,9 +214,9 @@ export default {
         // abs is absolute position on map
         var adjustedX = this.mouseX - window.innerWidth/2;
         var adjustedY = this.mouseY - window.innerHeight/2;
-        console.log(adjustedX, adjustedY)
-        var absX = adjustedX/this.zoom*40 + this.totalDisplacementX - this.xOffSet/this.zoom*40;
-        var absY = adjustedY/this.zoom*40 + this.totalDisplacementY - this.yOffSet/this.zoom*40;
+        console.log(this.totalDisplacementX)
+        var absX = adjustedX/this.zoom*40 + this.totalDisplacementX;
+        var absY = adjustedY/this.zoom*40 + this.totalDisplacementY;
         console.log(absX, absY)
         let tempZoom=0;
         if (portraitMode) {
@@ -235,12 +236,12 @@ export default {
           // UB
           if (this.zoom >= 75) this.zoom = 75;
         }
-        this.totalDisplacementX = absX - (adjustedX)/this.zoom*40 + this.xOffSet;
-        this.totalDisplacementY = absY - (adjustedY)/this.zoom*40 + this.yOffSet;
+        this.totalDisplacementX = absX + (adjustedX)/this.zoom*40;
+        this.totalDisplacementY = absY + (adjustedY)/this.zoom*40;
         mapBox.style.transition = "800ms ease all"
         this.moveInBounds();
       }
-    },
+    }, */
     getInitMouse() {
       this.initMouseX = this.mouseX
       this.initMouseY = this.mouseY
@@ -306,7 +307,7 @@ export default {
         mask.style.pointerEvents = "inherit"
         mapBox.style.transition = "800ms ease all"
 
-        mapBox.style.transform = `scale(3) translate(${window.innerWidth / 2.5 - boxCenterX}px, ${window.innerHeight / 7 - boxCenterY}px)`
+        mapBox.style.transform = `scale(3) translate(${window.innerWidth / 2.5 - boxCenterX + this.xOffSet}px, ${window.innerHeight / 7 - boxCenterY + this.yOffSet}px)`
         // Bring the popup to 0,0
         popup.style.transition = "transform .25s"
         popup.style.transform = "translateY(0vh)"
