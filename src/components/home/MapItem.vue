@@ -215,12 +215,6 @@ import tinycolor from "tinycolor2";
         <path id="Lally" d="m234.4 812 30.5.5v-2l.3-11.3-15.3-.3-15.3-.2-.2 13.3Z" />
         <path id="Union"
           d="m626.5 768.2 3.2.3 2.1.1-.1 10 9.1.2 5.5.1v1.9l.6 1.6 1.2 2 1.1 1.1 1.3.8 1.3.6 10.5.3 1.8-.2 2-1.1 1.5-1.5 1.2-1.8.7-2.3-.2-8.4 4.7.2h1.6l13.3.7.2-56.2-40.5-1.7-17.2-.7-.5 7.8H628l-1.6 46.2Z" /> 
-        <!-- PIN PLACEHOLDER -->
-        <foreignObject style="pointer-events: none;" x="460" y="825" width="100%" height="100%" v-if="pinned">
-          <div class = "map-overlays-icons">
-            <p id="test" style=" position:absolute; color:rgb(255, 255, 255); font-weight:1000;"><span class="map-overlays-icons">📌</span></p>
-          </div>
-        </foreignObject>
         </g>
       <g id="roadtop">
         <path d="m611.8 823-32.1-.7" />
@@ -451,7 +445,7 @@ export default {
   left: 50%;
   top: 50%;
   will-change: transform;
-  transform: translate(-50%, -50%) scale(1) scaleX(1) scaleY(1) rotate(0) skew(0deg, 0deg);
+  transform: translate(-1.5vw, -4.95vh) scale(1) scaleX(1) scaleY(1) rotate(0) skew(0deg, 0deg);
   justify-content: center;
   align-items: center;
   transition: 800ms ease all;
