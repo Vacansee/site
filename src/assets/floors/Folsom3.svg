@@ -1,0 +1,40 @@
+<svg version="1.1"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2070.8 1431">
+    <path d="M624 1082h98v-90h106v-75h198v70h102v95h98v129h379v-97h98V885h205v-84h-205v-14h65V492h97v-84h-97v-99l-163 1V180H441v97h-99v131H186v84h92v309H137v84h205v111l-32 1v85h32v32h99v97h183z" id="floor"/>
+    <path d="M1026 797h92v190h-92z" id="_unexcavated_stair1"/>
+    <path d="M1226 1089h90v122h-90z" id="_353b"/>
+    <path d="M1319 1122v89h102v-89z" id="_353a"/>
+    <path d="M1422 1091h32v56h-32z" id="_352e"/>
+    <path d="M1456 1124h24v87h-58v-61h34z" id="_352d"/>
+    <path d="M1605 1091h-31v56h31z" id="_352a"/>
+    <path d="M1572 1124h-24v87h57v-61h-33z" id="_352b"/>
+    <path d="M1482 1124h63v87h-63z" id="_352c"/>
+    <path d="M1711 885h197v-84h-197z" id="_unexcavated_stair2"/>
+    <path d="M1734 689h34v-58h-34z" id="_342c"/>
+    <path d="M1713 629h55v-64h-55z" id="_342b"/>
+    <path d="M1734 563h34v-58h-34z" id="_342a"/>
+    <path d="M1779 492h86v-85l-56 1v32h-30z" id="_341"/>
+    <path d="M1422 300h32v-56h-32z" id="_337a"/>
+    <path d="M1456 267h24v-87h-58v61h34z" id="_337b"/>
+    <path d="M1605 300h-31v-56h31z" id="_337e"/>
+    <path d="M1572 267h-24v-87h57v61h-33z" id="_337d"/>
+    <path d="M1482 267h63v-87h-63z" id="_337c"/>
+    <path d="M441 299h31v-56h-31z" id="_332a"/>
+    <path d="M475 267h23v-87h-57v61h34z" id="_332b"/>
+    <path d="M624 299h-32v-56h32z" id="_332e"/>
+    <path d="M590 267h-24v-87h58v61h-34z" id="_332d"/>
+    <path d="M501 267h63v-87h-63Z" id="_332c"/>
+    <path d="M138 885h197v-84H138Z" id="_unexcavated_stair3"/>
+    <path d="M312 689h-35v-58h35z" id="_323a"/>
+    <path d="M333 629h-56v-64h56z" id="_323b"/>
+    <path d="M312 563h-35v-58h35z" id="_323c"/>
+    <path d="M342 892h220v228h-31v91h-90v-97h-99v-32h-32v-85l32-1z" id="_358"/>
+    <path d="M533 1122h91v89h-91z" id="_357"/>
+    <path d="M564 893h158v189h-98v38h-60z" id="_356"/>
+    <path d="M1022 262v-82h100v82z" id="_excavatedLAVM"/>
+    <path d="M1122 264v104h-66V264Z" id="_excavatedLAVW"/>
+    <path d="M186 408h51v32h29v52h-80Z" id="_324"/>
+    <path d="M769 885v-84h57v84z" id="_311"/>
+    <path d="M754 571v131h73V571z" id="_312"/>
+    <path d="M754 571v-79h73v79z" id="_excavatedele"/>
+
+</svg>

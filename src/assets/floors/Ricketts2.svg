@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 3300 2550">
   <path id="floor" d="M114 859h3070v938H114z"/>
-  <path id="_203" d="M114 859h578v938H114z"/>
   <path id="_202D" d="M692 859h138v394H692z"/>
   <path id="_202C" d="M830 859h166v281H830z"/>
   <path id="_202B" d="M997 859h182v281H997z"/>
@@ -14,7 +13,6 @@
   <path id="_202A" d="M1178 859h171v281h-171z"/>
   <path id="_202E" d="M1264 1140h86v113h-86z"/>
   <path id="_201" d="M1537 1112h-108v141h-80V859h188v253Z"/>
-  <path id="_208" d="M2138 1396h359v401h-359z"/>
   <path id="_209" d="M2497 1493h158v304h-158z"/>
   <path id="_209A" d="M2655 1493h201v304h-201z"/>
   <path id="_209C" d="M2856 1624h327v172h-327z"/>
@@ -23,4 +21,6 @@
   <path id="_213A" d="M1752 1192h105v61h-105z"/>
   <path id="_212" d="M1857 859h621v394h-621z"/>
   <path id="_211" d="M2478 859h705v394h-705z"/>
+  <path id="_208" d="M2138 1396h359v401h-359z"/>
+  <path id="_203" d="M114 859h578v938H114z"/>
 </svg>

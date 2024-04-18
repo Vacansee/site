@@ -2,6 +2,7 @@
 // Basic imports
 import moment from 'moment-timezone'
 import tinycolor from "tinycolor2";
+import router from '../../router';
 </script>
 
 <template>
@@ -11,6 +12,7 @@ import tinycolor from "tinycolor2";
 </template>
   
 <script>
+
 const getFloorSVG = async (floorName) => {
   try {
     const module = await import(`../../assets/floors/${floorName}.svg`)
@@ -50,8 +52,8 @@ export default {
         }
         else {
           this.floorSVG = await getFloorSVG(floorName)
-          if (!this.floorSVG) this.$showToast({title: 'Map not yet implemented!'})
-        }
+          router.push({ name: 'buildingAndFloor', params: { building: this.global.bldg, floor: this.global.floor } })
+          if (!this.floorSVG) {this.$showToast({title: 'Map not yet implemented!'})}}
       },
       immediate: true,
     },
@@ -93,6 +95,7 @@ export default {
         const clonedPath = path.cloneNode(true);
         path.parentNode.appendChild(clonedPath);
         this.roomSVG = clonedPath;
+        router.push({ name: 'buildingAndRoom', params: { room: this.global.room } })
         setTimeout(() => {
           clonedPath.setAttribute("id", "selected");
           let border = tinycolor(path.getAttribute("fill")).darken(30).toString();
@@ -103,6 +106,7 @@ export default {
         if (this.roomSVG != null) this.roomSVG.remove()
         this.roomSVG = null
         this.global.room = ""
+        router.push({ name: 'buildingAndFloor', params: { floor: this.global.floor }})
       }
     },
     getColorVal(name) {

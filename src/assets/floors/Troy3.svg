@@ -1,0 +1,32 @@
+<svg version="1.1" id="svg1" viewBox="0 0 1991 1240" xmlns="http://www.w3.org/2000/svg">
+  <path d="M153 378h460l3-243h196v-21l354 2v8h221l-1 255 459-2v728H153Z" id="floor"/>
+  <path d="M615 134h197v76H704v70h-89z" id="excavated_LAVW"/>
+  <path d="M711 294v-79h101v79z" id="excavated_LAVX"/>
+  <path d="M944 115h112v112l-112-2Z" id="_3003"/>
+  <path d="M944 234h112v101H944Z" id="excavated_ele"/>
+  <path d="M1065 335V115h101v9h220v211z" id="excavated_stair"/>
+  <path d="M153 378h285v210H153Z" id="_3016"/>
+  <path d="M570 378h56v50h-56z" id="_3014"/>
+  <path d="M444 378h119v57h63v120H442Z" id="_3013"/>
+  <path d="M453 674v-86h-9v-31h74v5h101v120l-159-3v-5z" id="_3012"/>
+  <path d="M153 593h202v294l-202-2V772h13v-62h-13z" id="_3017"/>
+  <path d="M153 1105V892h285v213z" id="_3018"/>
+  <path d="M444 918h162v187H444Z" id="_3019"/>
+  <path d="M610 918h345v187H610Z" id="_3020"/>
+  <path d="M444 913v-23h9v-82h7v-5h157v5h2l-2 105z" id="_3011"/>
+  <path d="M635 913v-43h-2v-74h11v-14h98v131z" id="_3010.02"/>
+  <path d="M821 811h134v102H821Z" id="_3010.01"/>
+  <path d="M955 803v-86l3-4 2-8 2-4 2-5 5-5 2-2 2-3 5-2 4-2 5-3 2-2h25l2 2 7 3h2l2 2 2 2 3 3 4 2 2 3v2h3v2l2 3 2 4v3l2 5v4l3 8v78z" id="_3007"/>
+  <path d="M962 811h224v294H962Z" id="_3022"/>
+  <path d="M1191 918h179v187h-179z" id="_3024"/>
+  <path d="M1375 918h165v187h-165z" id="_3025"/>
+  <path d="M1545 1088V894h13v-26h-2v-86h289v323h-287v-17z" id="_3026"/>
+  <path d="M1666 777v-67h103v67z" id="_3028"/>
+  <path d="M1845 705h-188V545h188z" id="_3029"/>
+  <path d="M1657 378h188v160h-188z" id="_3030"/>
+  <path d="M1076 462h97v117h40l-2-5h-29V378h226v196h-45v36h18v-31h61v95h-334v-35h-32z" id="_3032"/>
+  <path d="M1774 777v-67h58v67z" id="_3027"/>
+  <path d="M1415 378h235v399h-98l-3 110h-9v26h-91V574h-34z" id="_3031"/>
+  <path d="M816 462h108v177h-31v35h-70v-2h-7z" id="_3009"/>
+  <path d="M635 385h170v289H626v-62h9z" id="_excavated_stair"/>
+</svg>
