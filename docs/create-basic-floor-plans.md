@@ -24,7 +24,7 @@ In order to scale the pdf or end svg, you will need to:
 
 ![](.embed/create-basic-floor-plans-1.png)
 
-1. Press `Ctrl-A` to select all svg elements, then with the cursor tool, hold `Ctrl`, grab the bottom right arrow, and scale evenly to the bottom right of the document size. You may want to play around with positioning of your contents in the document frame, as it seems a bit of empty space is good for displaying the svg in the app (otherwise a part of the svg may be cut off --> you will need to test out your svg in the app after completion and it may need some tweaking). A DCC floorplan silhouette example is shown below to help gauge spacing.
+2. Press `Ctrl-A` to select all svg elements, then with the cursor tool, hold `Ctrl`, grab the bottom right arrow, and scale evenly to the bottom right of the document size. You may want to play around with positioning of your contents in the document frame, as it seems a bit of empty space is good for displaying the svg in the app (otherwise a part of the svg may be cut off --> you will need to test out your svg in the app after completion and it may need some tweaking). A DCC floorplan silhouette example is shown below to help gauge spacing.
 
 ![](.embed/create-basic-floor-plans-2.png)
 

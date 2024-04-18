@@ -2,11 +2,15 @@
 // Basic Imports
 import { RouterLink, RouterView } from 'vue-router'
 import Logo from '@/assets/logo.svg?component'
+import DiningIcon from '@/assets/icons/dining.svg?component'
 import PollIcon from '@/assets/icons/poll.svg?component'
 import GHIcon from '@/assets/icons/github.svg?component'
 import AutoComplete from 'primevue/autocomplete'
 import Button from "primevue/button"
 import Toast from 'primevue/toast'
+import DiningSurveyLightbox from './DiningSurveyLightbox.vue'
+import MapItem from '../src/components/home/MapItem.vue';
+import router from "@/router";
 </script>
 
 <template>
@@ -19,6 +23,9 @@ import Toast from 'primevue/toast'
       </div>
 
       <div id="right-nav">
+        <a href="#" @click.prevent="openDiningSurvey"><Button class="nav-btn dining" aria-label="Dining" >
+            <DiningIcon height="25" width="25"/>
+        </Button></a>
         <a href="https://forms.gle/Tu5xSSjK1MkZDXK69" target="_blank" rel="noopener noreferrer"><Button class="nav-btn" aria-label="Feedback" >
             <PollIcon height="25" width="25"/>
         </Button></a>
@@ -34,12 +41,19 @@ import Toast from 'primevue/toast'
     </div>
 
   <RouterView />
+  
+  <DiningSurveyLightbox ref="diningSurveyLightbox" @update:visible="handleLightboxVisibility">
+    <!-- Your survey form will go here -->
+  </DiningSurveyLightbox>
+
 </template>
 
 <script>
+
 export default {
   data() {
     return {
+      isLightboxVisible: false,
       exs: [
         "a building:  Russell Sage",
         "a dept. code:  CSCI 1200",
@@ -57,10 +71,21 @@ export default {
       handler() {
         this.$clearToasts()
         // Only shows header when a building is not selected
-        if (this.global.bldg)
-          document.getElementById("header").style.opacity = "0";
-        else
-          document.getElementById("header").style.opacity = "1";
+        if (this.global.bldg) {
+          document.getElementById("header").style.opacity = "0"
+        }
+        else {
+          document.getElementById("header").style.opacity = "1"
+        }
+      }
+    },
+    'global.invalidLoadMessage' : {
+      handler() {
+        // Tells the user when they entered an invalid URL path
+        if (this.global.invalidLoadMessage !== "") {
+          this.$showToast({type: 'info', title: 'Invalid URL', body: this.global.invalidLoadMessage, lasts: 3000})
+          this.global.invalidLoadMessage = ""
+        }
       }
     }
   },
@@ -69,6 +94,12 @@ export default {
     setInterval(this.changeEx, 5000);
   },
   methods: {
+    openDiningSurvey() {
+      this.$refs.diningSurveyLightbox.open();
+    },
+    handleLightboxVisibility(isVisible) {
+      this.isLightboxVisible = isVisible; 
+    },
     changeEx() {
       const ex = this.exs.shift()
       this.ex = `Try ${ex}`; this.exs.push(ex)
@@ -145,10 +176,12 @@ header {
   width: 3.25rem;
   height: 3.25rem;
   justify-content: center;
+  align-items: center;
   background-color: var(--unusedfill);
   border: 2px solid var(--buildbord);
   box-shadow: 0px 5px 25px rgba(0, 10, 20, 0.08);
   pointer-events: all;
+  padding: 0; 
 }
 
 .nav-btn:hover,
