@@ -62,9 +62,9 @@ import tinycolor from "tinycolor2"
                             <span v-for="item in getRoom().meta.cur[1]" class="sec">{{ item }}</span>
                         </p>
                         <p v-else>No reservation in session</p>
-                        <p v-if="getNextReservation()">Next reservation starts in
-                            <b>{{ getNextReservation().hours() }}h</b> and
-                            <b>{{ getNextReservation().minutes() }}m</b>
+                        <p v-if="getNextUnavailableReservation()">Next reservation starts in
+                            <b>{{ getNextUnavailableReservation().hours() }}h</b> and
+                            <b>{{ getNextUnavailableReservation().minutes() }}m</b>
                         </p>
                         <p v-else class="warn"> No more reservations today</p>
                     </div>
@@ -72,11 +72,11 @@ import tinycolor from "tinycolor2"
                     <div class="block reservation-block"> <!-- Block #2: Reservation Time Slots-->
                         <b>Time Slots<br /><br /></b>
                         <div class="time-slots">
-                            <button v-for="timeSlot in getTodaysClasses()" :key="timeSlot[1]" class="time-slot"
+                            <button v-for="timeSlot in getNextReservations()" :key="timeSlot[1]" class="time-slot"
                                 :class="{ unavailable: timeSlot[0] === 'Unavailable/Padding' }"
                                 @click=" timeSlot[0] === 'Available' && openLink(global.room)"
                                 :disabled="timeSlot[0] !== 'Available'">
-                                {{ timeSlot[1] }}
+                                {{ getRealTime(timeSlot[1]) }}
                             </button>
                         </div>
                     </div>
@@ -234,8 +234,8 @@ export default {
             if (!this.getBldg().meta.hasOwnProperty("open")) return false
             else return this.getBldg().meta.open
         },
-        // Returns the next reservation (for reservation rooms) 
-        getNextReservation() {
+        // Returns all next reservations
+        getNextReservations() {
             let nextSlots = []
             let roomData = this.getRoom()
             let proceed  = false
@@ -248,8 +248,13 @@ export default {
                         nextSlots.push([roomData[time][0], time])
                     }
             }
+            return nextSlots
+        },
+        // Returns the next unavailable reservation (for reservation rooms) 
+        getNextUnavailableReservation() {
+            let nextSlots = this.getNextReservations()
             for (let timeSlot in nextSlots) {
-                if (nextSlots[timeSlot][0] == 'Unavailable') {
+                if (nextSlots[timeSlot][0] == 'Unavailable/Padding') {
                     const i = moment(this.global.time, 'e:HHmm'), f = moment(nextSlots[timeSlot][1], 'e:HHmm')
                     return moment.duration(f.diff(i))
                 } 
