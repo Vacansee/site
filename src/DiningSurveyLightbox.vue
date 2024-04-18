@@ -18,14 +18,18 @@
                 :class="{ 'sub-tab': true, 'active': activeSubTab[option.name] === subKey }"
                 @click.stop="handleSubTabClick(option.name, subKey)">
               <h4>{{ subKey }}</h4>
-              <p v-show="activeSubTab[option.name] === subKey">Hours: {{ formatTimes(sub.times).join(', ') }}</p>
+              <div v-for="time in formatTimes(sub.times)" :key="time">
+                <p v-show="activeSubTab[option.name] === subKey">{{ time }}</p>
+              </div>
               <a v-show="activeSubTab[option.name] === subKey"
                 :href="sub.url.includes('http') ? sub.url : `https://${sub.url}`"
                 target="_blank" rel="noopener noreferrer">More details</a>
             </div>
           </div>
           <div v-else>
-            <p>Hours: {{ formatTimes(option.times).join(', ') }}</p>
+            <div v-for="time in formatTimes(option.times)" :key="time">
+              <p>{{ time }}</p>
+            </div>
             <a :href="option.url.includes('http') ? option.url : `https://${option.url}`"
               target="_blank" rel="noopener noreferrer" class="details-link">More details</a>
           </div>
@@ -35,8 +39,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script>
 export default {
@@ -88,18 +90,27 @@ export default {
     handleSubTabClick(parentName, subKey) {
       this.activeSubTab[parentName] = this.activeSubTab[parentName] === subKey ? null : subKey;
     },
-    formatTime24to12(time) {
+    formatTime24to12(time, label) {
       const [hours, minutes] = time.split(':');
       const hour = parseInt(hours, 10);
       const suffix = hour >= 12 ? 'PM' : 'AM';
-      const adjustedHour = hour % 12 || 12; // converts "00" to "12" and handles 12 noon/midnight correctly
-      return `${adjustedHour}:${minutes} ${suffix}`;
+      const adjustedHour = hour % 12 || 12; 
+      const formattedTime = `${adjustedHour}:${minutes} ${suffix}`;
+      return label ? `${label} ${formattedTime}` : formattedTime;
     },
 
     formatTimes(times) {
       return times.map(time => {
+        let label = "";
+        time = time.replace(/(Breakfast|Brunch|Lunch|Dinner)\s*/, (match) => {
+          label = match.trim();
+          return "";
+        });
+
         const [start, end] = time.split('-');
-        return `${this.formatTime24to12(start)} - ${this.formatTime24to12(end)}`;
+        const formattedStart = this.formatTime24to12(start, label);
+        const formattedEnd = this.formatTime24to12(end);
+        return `${formattedStart} - ${formattedEnd}`;
       });
     }
   },
@@ -120,7 +131,7 @@ export default {
 
 .lightbox-content {
   background: white;
-  padding: 20px;
+  padding: 10px 20px 40px;
   border-radius: 8px 0 0 8px; 
   width: 100%; 
   max-width: 370px; 
@@ -149,7 +160,7 @@ export default {
   margin: 1px;
   text-align: center;
   cursor: pointer;
-  padding: 3px;
+  padding: 2px;
   font-size: 0.82rem; 
 }
 
@@ -179,8 +190,12 @@ export default {
   margin-top: -5px;
 }
 
+.h3, .sub-tab p, .details-link {
+  margin: 3px 0;
+}
+
 .close-button {
-  margin-top: 6px;
+  margin-top: 12px;
 }
 
 .scrollable-content {
@@ -195,6 +210,7 @@ export default {
 
 .sub-tab h4 {
   font-weight: bold;
+  margin-bottom: 4px;
 }
 
 .sub-tab p {
