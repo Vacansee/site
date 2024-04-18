@@ -98,7 +98,6 @@ export default {
       const formattedTime = `${adjustedHour}:${minutes} ${suffix}`;
       return label ? `${label} ${formattedTime}` : formattedTime;
     },
-
     formatTimes(times) {
       return times.map(time => {
         let label = "";
@@ -110,7 +109,7 @@ export default {
         const [start, end] = time.split('-');
         const formattedStart = this.formatTime24to12(start, label);
         const formattedEnd = this.formatTime24to12(end);
-        return `${formattedStart} - ${formattedEnd}`;
+        return label ? `${formattedStart} - ${formattedEnd}` : `Hours: ${formattedStart} - ${formattedEnd}`;
       });
     }
   },
