@@ -13,11 +13,16 @@ import Router from './router'
 import Moment from 'moment-timezone'
 // Basic CSS
 import './assets/main.css'
+// Import function for manually loading based on URL path
+import {router_info, Routing} from "@/router";
+// Import router to update URL
+import router from "./router";
 
 // Primevue resources
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
 import './assets/themes/theme.css';
+import * as path from "path";
 
 const global = reactive({ // The global reactive object!
 	// Any changes to its members will trigger reactivity in components that 
@@ -31,7 +36,8 @@ const global = reactive({ // The global reactive object!
 	time: Moment.tz('America/New_York').format('e:HHmm'),
 	// time: Moment.tz('2023-11-29 11:55', 'America/New_York').format('e:HHmm'), // Test time
 	firstCalc: false,
-	sFocus: false
+	sFocus: false,
+	invalidLoadMessage: ""
 })
 
 // On page load, fetch building/room and search data from Vacansee/data:
@@ -53,9 +59,13 @@ Promise.all([
 	// 	return resp.json()
 	// }),
 	fetch('https://raw.githubusercontent.com/Vacansee/data/main/data/search/toRoom.json').then(resp => {
-		if (!resp.ok) throw new Error(`failed on 'deptToCRN.json': ${resp.status}`)
+		if (!resp.ok) throw new Error(`failed on 'toRoom.json': ${resp.status}`)
 		return resp.json()
 	}),
+	// fetch('https://raw.githubusercontent.com/Vacansee/data/main/data/dining.json').then(resp => {
+	// 	if (!resp.ok) throw new Error(`failed on 'dining.json': ${resp.status}`)
+	// 	return resp.json()
+	// }),
   ])
   .then(data => { // data is an array of the resolved values from promises
 		global.data = data.shift()
@@ -65,6 +75,50 @@ Promise.all([
 		console.log('Data loaded!')
 		checkActive()
 		global.firstCalc = true
+	  	// Update global variables with URL path
+	  	Routing(global)
+	  	// Check user inputted values
+	  	if (router_info.checkValues) {
+			// Checks URL format
+			if (global.bldg === "" && router.currentRoute.value.name !== "home") {
+				console.log("Not a valid URL format")
+				global.bldg = ""
+				global.floor = null
+				global.room = ""
+				global.invalidLoadMessage = "Not a valid URL format"
+			} else if (global.bldg !== "") {
+				// Checks inputted building
+				if (global.data[global.bldg] === undefined) {
+					console.log("Invalid URL: not a valid building")
+					global.bldg = ""
+					global.floor = null
+					global.room = ""
+					global.invalidLoadMessage = "Not a valid building"
+					router.push({name: 'home'})
+				}
+				// Sets the floor if only a building is entered (not an error)
+				else if (router.currentRoute.value.fullPath.split('/').length === 3) {
+					global.floor = global.data[global.bldg].meta.floors[1]
+					router.push({name: 'buildingAndFloor', params: {building: global.bldg, floor: global.floor}})
+				}
+				// Checks inputted floor
+				else if (global.floor > global.data[global.bldg].meta.floors[0]) {
+					console.log("Invalid URL: not a valid floor")
+					global.floor = global.data[global.bldg].meta.floors[1]
+					global.invalidLoadMessage = "Not a valid floor"
+					router.push({name: 'buildingAndFloor', params: {building: global.bldg, floor: global.floor}})
+				}
+				// Checks inputted room
+				else if (global.room !== "" && !global.data[global.bldg].hasOwnProperty(global.room)) {
+					console.log("Invalid URL: not a valid room")
+					global.floor = global.data[global.bldg].meta.floors[1]
+					global.room = ""
+					global.invalidLoadMessage = "Not a valid room"
+					router.push({name: 'buildingAndFloor', params: {building: global.bldg, floor: global.floor}})
+				}
+			}
+			router_info.checkValues = false
+		}
 	})
   .catch(error => { this.$showToast({title: 'Failed to load data', body: error}) })
 

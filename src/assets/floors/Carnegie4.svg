@@ -1,5 +1,6 @@
 <svg version="1.1" id="svg1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3200 2472.7">
+  <path d="M44 2045h728v126h1656v-130h731V353H46Z" id="floor"/>
   <path d="M1333 1959v211H773v-127H45V352h1235v353h310v574h-312v307H351v158h433v122h390v92z" id="_unexcavated2"/>
   <path d="M2786 353v1061h370V354Z" id="_unexcavated1"/>
-  <path d="M44 2045h728v126h1656v-130h731V353H46Z" id="floor"/>
+  
 </svg>
