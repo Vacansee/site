@@ -20,7 +20,7 @@ import DiningSurveyLightbox from './DiningSurveyLightbox.vue'
         </RouterLink>
       </div>
 
-      <div id="right-nav" v-show="!isLightboxVisible">
+      <div id="right-nav">
         <a href="#" @click.prevent="openDiningSurvey"><Button class="nav-btn dining" aria-label="Dining" >
             <DiningIcon height="25" width="25"/>
         </Button></a>

@@ -1,26 +1,21 @@
 <template>
   <div v-if="visible" class="lightbox-backdrop" @click.self="close">
     <div class="lightbox-content">
-      <!-- Tabs for dining options -->
-      <div class="tabs">
-        <div 
-          v-for="(option, index) in diningOptions" 
-          :key="index" 
-          class="tab" 
-          :class="{ active: activeTab === index }" 
-          @click="handleTabClick(index)">
-          {{ option.name }}
+      <div class="tabs-container">
+        <div class="tabs">
+          <div v-for="(option, index) in diningOptions" :key="index"
+               :class="{ 'tab': true, 'active': activeTab === index, 'student-union': option.name === 'Student Union' }"
+               @click="handleTabClick(index)">
+            {{ option.name }}
+          </div>
         </div>
       </div>
-      
-      <!-- Content for each tab, including potential sub-options -->
       <div class="tab-content">
         <div v-for="(option, index) in diningOptions" :key="index" v-show="activeTab === index">
           <h3>{{ option.name }}</h3>
           <div v-if="option.subOptions" class="scrollable-content">
             <div v-for="(sub, subKey) in option.subOptions" :key="subKey"
-                 class="sub-tab"
-                 :class="{ active: activeSubTab[option.name] === subKey }"
+                 :class="{ 'sub-tab': true, 'active': activeSubTab[option.name] === subKey }"
                  @click.stop="handleSubTabClick(option.name, subKey)">
               <h4>{{ subKey }}</h4>
               <p v-show="activeSubTab[option.name] === subKey">Hours: {{ sub.times.join(', ') }}</p>
@@ -31,16 +26,17 @@
           </div>
           <div v-else>
             <p>Hours: {{ option.times.join(', ') }}</p>
-            <a :href="option.url.includes('http') ? option.url : `https://${option.url}`" 
-               target="_blank" rel="noopener noreferrer">More details</a>
+            <a :href="option.url.includes('http') ? option.url : `https://${option.url}`"
+               target="_blank" rel="noopener noreferrer" class="details-link">More details</a>
           </div>
         </div>
       </div>
-
-      <button @click="close">Close</button>
+      <button class="close-button" @click="close">Close</button>
     </div>
   </div>
 </template>
+
+
 
 <script>
 export default {
@@ -99,57 +95,94 @@ export default {
 <style>
 .lightbox-backdrop {
   position: fixed;
-  top: 0;
-  right: 0; /* Align to the right side */
-  width: 30vw; /* Adjust width to a smaller percentage of the view width */
-  height: 100vh; /* Full height to extend along the right side */
-  background-color: rgba(0, 0, 0, 0); /* Semi-transparent background */
+  top: 80px;
+  right: 10px;
+  width: 100vw; 
+  height: calc(100vh - 100px); 
+  background-color: rgba(0, 0, 0, 0);
   display: flex;
-  justify-content: flex-end; /* Align lightbox to the right */
+  justify-content: flex-end; 
 }
 
 .lightbox-content {
   background: white;
   padding: 20px;
-  border-radius: 8px 0 0 8px; /* Rounded corners on the left side only */
-  width: 100%; /* Full width of the backdrop */
-  max-width: 300px; /* Maximum width to keep it narrow */
-  height: 100%; /* Full height */
-  overflow-y: auto; /* Allow vertical scrolling if content is too long */
-  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); /* Shadow on the left edge for depth */
+  border-radius: 8px 0 0 8px; 
+  width: 100%; 
+  max-width: 400px; 
+  height: 100%; 
+  overflow-y: auto; 
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.tabs-container {
+  max-height: 180px; 
+  overflow-y: auto; 
+}
+
 .tabs {
   display: flex;
-  overflow-x: auto; /* Enables horizontal scrolling */
-  white-space: nowrap; /* Prevents wrapping of tabs */
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ccc;
+  flex-wrap: wrap; 
+  align-items: center;
+  justify-content: flex-start;
 }
+
 .tab {
-  flex-shrink: 0; /* Prevents tabs from shrinking */
-  margin-right: 10px;
+  flex-basis: calc(50% - 10px); 
+  margin: 1px;
+  text-align: center;
   cursor: pointer;
-  padding: 5px;
+  padding: 3px;
+  font-size: 0.82rem; 
 }
+
 .tab.active {
   font-weight: bold;
   border-bottom: 2px solid blue;
 }
+
 .tab-content {
-  margin-top: 20px;
+  margin-top: 5px;
+  flex-grow: 1; /* Take up all available space */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center content vertically */
+  text-align: center;
+  width: 100%;
 }
+
+.tab.active, .student-union.active {
+  font-weight: bold;
+  border-bottom: 2px solid blue;
+}
+
+.tab.student-union.active + .tab-content {
+  padding-top: -5px; 
+}
+
+.close-button {
+  margin-top: 6px;
+}
+
 .scrollable-content {
   max-height: 300px;
   overflow-y: auto;
 }
+
 .sub-tab {
-  cursor: pointer;
-  display: block; 
+  display: block;
+  margin-top: -15px;
 }
+
 .sub-tab h4 {
-  font-weight: bold; 
+  font-weight: bold;
 }
+
 .sub-tab p {
-  font-weight: normal; 
+  font-weight: normal;
 }
 </style>
