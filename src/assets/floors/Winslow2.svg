@@ -1,24 +1,12 @@
-<svg version="1.1" id="svg1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 843 264.1">
-  <path d="m0 36 427-1V0h62v35h354v229H0Z" id="floor"/>
-  <path d="M75 36v67h7v20h-7v9H0V36z" id="_2148"/>
-  <path d="M75 36h137v121h-77v6h-20v-6H75v-34h7v-20h-7z" id="_2144"/>
-  <path d="m212 36 138-1 1 120v2h-23v6h-20v-6h-96z" id="_2132"/>
-  <path d="M350 35h77v14h10v18h-9v27h-3v63h-47l1 6h-19v-6h-9z" id="_2128"/>
-  <path d="M427 35V0h62v35h5v56h-18v19h-30V91h-18V67h9V49h-10z" id="_2126"/>
-  <path d="M425 157V94h3v-3h18v19h30V91h22v66h-35v6h-22v-6z" id="_2124"/>
-  <path d="M494 35h71v79h-41v4l-18 1h-2v-5h-6V91h-4z" id="_2120"/>
-  <path d="M565 35h69v79h-49v5h-17v-5h-3z" id="_2112"/>
-  <path d="M634 35h61v79h-40v5h-17v-5h-4z" id="_2108"/>
-  <path d="M695 35h148v117H713v-14h-7v-18h7v-4h-18z" id="_2104"/>
-  <path d="M843 152v112H685v-77h28v-4h-6v-18h6v-13z" id="_2103"/>
-  <path d="M685 187H575v-5h-19v5h-2v77h131z" id="_2ST01"/>
-  <path d="M554 187h-17v-5h-23v5h-20v49h60z" id="_2E01"/>
-  <path d="M554 236v28h-79v-38h4v-4h13v4h2v10z" id="_2121"/>
-  <path d="M475 264v-38h-2v-4h-17v4h-16v38z" id="_2123"/>
-  <path d="M440 264v-38h-2v-4h-17v4h-20v38z" id="_2125"/>
-  <path d="M401 210v54h-50v-76h50v4h5l1 18z" id="_2127"/>
-  <path d="M351 264v-79h7v-23h-7v-5h-23v6h-20v-6h-29v107z" id="_2113"/>
-  <path d="M279 157v107H147v-76h-4v-4h-19l1 4h-23v-5h5v-20h-5v-6h13v6h20v-6z" id="_2137"/>
-  <path d="M147 264v-76h-4v-4h-19l1 4H72v76z" id="_2143"/>
-  <path d="M72 264v-76h30v-5h5v-20h-5v-6H75v-25H0v132z" id="_2ST02"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 843 264">
+  <path d="m0 36 427-1V0h62v35h354v229H0Z"/>
+  <path d="M75 36v67h7v20h-7v9H0V36Z"/>
+  <path d="M75 36h137v121h-77v6h-20v-6H75v-34h7v-20h-7zM212 36l138-1 1 120v2h-23v6h-20v-6h-96z"/>
+  <path d="M350 35h77v14h10v18h-9v27h-3v63h-74z"/>
+  <path d="M427 35V0h62v35h5v56h-18v19h-30V91h-18V67h9V49h-10z"/>
+  <path d="M425 157V94h3v-3h18v19h30V91h22v66h-57Z"/>
+  <path d="M494 35h71v79h-67V91h-4zM565 35h69v79h-67 1-3zM634 35h61v79h-61zM695 35h148v117H713v-14 1-23h-18zM843 152v112H685v-77h28v-35zM685 187H554v77h131zM554 187h-60v49h60z"/>
+  <path d="M554 236v28h-79v-38h19v10zM475 264v-38h-35v38zM440 264v-38h-39v38zM401 210v54h-50v-76h50v22zM351 264V157h-23v6h-20v-6h-29v107zM279 157v107H147v-76h-4v-4h-19l1 4h-23v-5h5v-20h-5v-6h13v6h20v-6z"/>
+  <path d="M147 264v-76h-4v-4h-19l1 4H72v76z"/>
+  <path d="M72 264v-76h30v-5h5v-20h-5v-6H75v-25H0v132z"/>
 </svg>
