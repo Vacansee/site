@@ -14,7 +14,7 @@ import Toast from 'primevue/toast'
   <!-- HTML For Header -->
   <header id="header">
       <div id="left-nav">
-        <RouterLink to="/"> <Logo class="logo" height="75" width="75"/>
+        <RouterLink to="/"> <Logo class="logo" height="75" width="75" :style="{ fill: global.darkMode ? '#40c269' : '' }"/>
         </RouterLink>
       </div>
 
@@ -135,10 +135,9 @@ export default {
     },
 
     checkDark2() {
-
+      const paths = document.querySelectorAll('.logo path');
     this.global.darkMode = !this.global.darkMode;
     if (this.global.darkMode) {
-      // console.log("1");
       document.documentElement.style.setProperty('--background', '#171918');
       document.documentElement.style.setProperty('--carroad', '#232624');
       document.documentElement.style.setProperty('--walkpath', '#2e322f');
@@ -148,10 +147,14 @@ export default {
       document.documentElement.style.setProperty('--buildbord', '#505a52');
       document.documentElement.style.setProperty('--roomfill', '#5d685f');
       document.documentElement.style.setProperty('--unusedfill', '#3fa053');
+      const paths = document.querySelectorAll('.logo path');
+        paths.forEach(path => {
+          path.style.fill = '#40c269';
+        });
 
+      
     }
     else if (!this.global.darkMode) {
-      // console.log("2");
       document.documentElement.style.setProperty('--background', '#ffffff');
       document.documentElement.style.setProperty('--carroad', '#d4e5e2');
       document.documentElement.style.setProperty('--walkpath', '#a2c3c3');
@@ -161,7 +164,18 @@ export default {
       document.documentElement.style.setProperty('--buildbord', '#7cacab');
       document.documentElement.style.setProperty('--roomfill', '#d5ebe7');
       document.documentElement.style.setProperty('--unusedfill', '#bbd3cf');
+      const originalFillColors = {
+            'path1': '#205c5b',
+            'path2': '#205c5b',
+            'path3': '#205c5b',
+            'path4': '#489991'
+        };
+        const paths = document.querySelectorAll('.logo path');
+        paths.forEach((path, index) => {
+            path.style.fill = originalFillColors['path' + (index + 1)];
+        });
     }
+
     return
   }
   }
