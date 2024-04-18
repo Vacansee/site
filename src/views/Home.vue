@@ -47,6 +47,8 @@ export default {
       curMoveY: 0,
       maxX: 750,
       maxY: 300,
+      zoom: 40,
+      threshold: 1,
     }
   },
   watch: {
@@ -67,15 +69,34 @@ export default {
     'global.bldg': {
       handler() {
         if ([...Object.keys(this.global.data)].includes(this.global.bldg)) {
+          this.buildingSelected = true;
           for (const b of buildings.children) {
             if (b.id === this.global.bldg) this.buildingSelect(b)
           }
+        } else {
+          this.buildingSelected = false;
         }
       }
     }
   },
   mounted() {
-    // addEventListeners allow the file to call a function when
+  //  window.addEventListener('touchstart', () => {this.getInitMouse})
+    window.addEventListener('touchend', () => {this.clicked = false, this.totalDisplacementX += this.curMoveX,  this.totalDisplacementY += this.curMoveY, this.moveInBounds()})
+    window.addEventListener('touchmove', (e) => {
+    if (!this.clicked) {
+      this.initMouseX = e.touches[0].pageX
+      this.initMouseY = e.touches[0].pageY
+      this.curMoveX = 0
+      this.curMoveY = 0
+      this.clicked = true
+      console.log("bing")
+    }
+    console.log(this.clicked)
+    this.mouseX = e.touches[0].pageX
+    this.mouseY = e.touches[0].pageY
+    this.moveScreen()
+    })
+    // addEventListeners allow the file to call a function when 
     // an action occurs
     window.addEventListener("mousemove", (window) => {
       this.mouseX = window.clientX;
@@ -112,43 +133,42 @@ export default {
     } else if (!this.bldgSVG){
       popup.style.transform = "TranslateY(50vh)"
     }
+    // Allow for the scroll wheel to zoom the map
+    window.addEventListener("wheel", this.onMouseScroll);
   },
   methods: {
     runFind() {
       console.clear()
       let count = 0 
       for (const b of buildings.children) {
-        console.log(b.id)
         count++
       }
-      console.log(count)
-
-      // for (const o of other.children) {
-      //   if (!(o.id in this.global.data)) console.log(o.id)
-      // }
     },
     moveInBounds() {
       if (!this.buildingSelected) {
         if (this.totalDisplacementX > this.maxX) {
           this.totalDisplacementX = this.maxX
+          mapBox.style.transition = "800ms ease all"
         } else if (this.totalDisplacementX < -this.maxX) {
           this.totalDisplacementX = -this.maxX
+          mapBox.style.transition = "800ms ease all"
         }
         if (this.totalDisplacementY > this.maxY) {
           this.totalDisplacementY = this.maxY
+          mapBox.style.transition = "800ms ease all"
         } else if (this.totalDisplacementY < -this.maxY) {
           this.totalDisplacementY = -this.maxY
+          mapBox.style.transition = "800ms ease all"
         }
         var xPos = -1.5*window.innerWidth/100 - this.totalDisplacementX
         var yPos = -4.95*window.innerHeight/100 - this.totalDisplacementY
-        mapBox.style.transition = "800ms ease all"
-        mapBox.style.transform = `scale(1) translate(${xPos}px, ${yPos}px)`
-    }
+        mapBox.style.transform = `scale(${1*this.zoom/40}) translate(${xPos}px, ${yPos}px)`
+      }
     },
     moveScreen(c) {
       if (!this.buildingSelected && this.clicked) {
-        this.curMoveX =  this.initMouseX - this.mouseX 
-        this.curMoveY = this.initMouseY - this.mouseY
+        this.curMoveX =  (this.initMouseX - this.mouseX)/this.zoom*40
+        this.curMoveY = (this.initMouseY - this.mouseY)/this.zoom*40
         var xPos = -1.5*window.innerWidth/100 - (this.totalDisplacementX + this.curMoveX)
         var yPos = -4.95*window.innerHeight/100 - (this.totalDisplacementY + this.curMoveY)
         var pushbackScale = 10
@@ -163,7 +183,54 @@ export default {
           var yPos = -4.95*window.innerHeight/100 + (this.maxY + pushbackScale*Math.sqrt(-this.totalDisplacementY - this.curMoveY-this.maxY))
         }
         mapBox.style.transition = "0ms ease all"
-        mapBox.style.transform = `scale(1) translate(${xPos}px, ${yPos}px)`
+        mapBox.style.transform = `scale(${1*this.zoom/40}) translate(${xPos}px, ${yPos}px)`
+      }
+    },
+    onMouseScroll({deltaX,deltaY}) {
+      // If you arent selected on a building
+      if (!this.global.sFocus && !this.global.bldg){
+        let dirwheel = 0;
+        if (deltaY>0) {
+          dirwheel = -1;
+        } else if (deltaY<0) {
+          dirwheel = 1;
+        }
+
+        let x = window.innerWidth;
+        let y = window.innerHeight;
+        let ratio = x / y;
+        let portraitMode = false;
+        if (ratio < this.threshold) {
+          portraitMode = true;
+        }
+        // Adjusted is mousePos on screen itself
+        // abs is absolute position on map
+        var adjustedX = this.mouseX - window.innerWidth/2;
+        var adjustedY = this.mouseY - window.innerHeight/2;
+        var absX = adjustedX/this.zoom*40 + this.totalDisplacementX;
+        var absY = adjustedY/this.zoom*40 + this.totalDisplacementY;
+        let tempZoom=0;
+        if (portraitMode) {
+          tempZoom = y/50+this.zoom+dirwheel*10;
+        } else {
+          tempZoom = x/50+this.zoom+dirwheel*10;
+        }
+        this.zoom +=dirwheel*10;
+        if (dirwheel == -1) {
+          // Start slowing down zoom out
+          if (this.zoom <= 40) this.zoom -= this.zoom/40/40 
+          // LB
+          if (this.zoom <= 30) this.zoom = 30;
+        } else {
+          // Start slowing down zoom in
+          if (this.zoom >= 60) this.zoom += 60/this.zoom/this.zoom 
+          // UB
+          if (this.zoom >= 75) this.zoom = 75;
+        }
+        this.totalDisplacementX = absX - adjustedX/this.zoom*40;
+        this.totalDisplacementY = absY - adjustedY/this.zoom*40;
+        mapBox.style.transition = "800ms ease all"
+        this.moveInBounds();
       }
     },
     getInitMouse() {
@@ -172,6 +239,7 @@ export default {
       this.curMoveX = 0
       this.curMoveY = 0
       this.clicked = true
+      console.log("bing")
     },
     // Make the name tag pop up
     nameTagAppear(b) {
@@ -230,10 +298,6 @@ export default {
         mask.style.opacity = 0.65
         mask.style.pointerEvents = "inherit"
         mapBox.style.transition = "800ms ease all"
-        console.log(window.innerWidth / 2 - boxCenterX + this.totalDisplacementX);
-        console.log(window.innerHeight / 2 - boxCenterY - 50);
-        console.log(boxCenterX, boxCenterY);
-        console.log(this.totalDisplacementX, this.totalDisplacementY)
 
         mapBox.style.transform = `scale(3) translate(${window.innerWidth / 2 - boxCenterX}px, ${window.innerHeight / 2 - boxCenterY - 50}px)`
         // Bring the popup to 0,0
