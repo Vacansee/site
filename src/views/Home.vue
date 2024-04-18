@@ -41,14 +41,16 @@ export default {
       initMouseY: 0,
       clicked: false,
       buildingSelected: false,
-      totalDisplacementX: 0,
+      totalDisplacementX: 510,
       curMoveX: 0,
-      totalDisplacementY: 0,
+      totalDisplacementY: 850,
       curMoveY: 0,
       maxX: 750,
       maxY: 300,
       zoom: 40,
       threshold: 1,
+      xOffSet: 510,
+      yOffSet: 850,
     }
   },
   watch: {
@@ -80,6 +82,7 @@ export default {
     }
   },
   mounted() {
+    this.moveInBounds()
   //  window.addEventListener('touchstart', () => {this.getInitMouse})
     window.addEventListener('touchend', () => {this.clicked = false, this.totalDisplacementX += this.curMoveX,  this.totalDisplacementY += this.curMoveY, this.moveInBounds()})
     window.addEventListener('touchmove', (e) => {
@@ -89,7 +92,6 @@ export default {
       this.curMoveX = 0
       this.curMoveY = 0
       this.clicked = true
-      console.log("bing")
     }
     console.log(this.clicked)
     this.mouseX = e.touches[0].pageX
@@ -146,18 +148,18 @@ export default {
     },
     moveInBounds() {
       if (!this.buildingSelected) {
-        if (this.totalDisplacementX > this.maxX) {
-          this.totalDisplacementX = this.maxX
+        if (this.totalDisplacementX > this.maxX+this.xOffSet) {
+          this.totalDisplacementX = this.maxX+this.xOffSet
           mapBox.style.transition = "800ms ease all"
-        } else if (this.totalDisplacementX < -this.maxX) {
-          this.totalDisplacementX = -this.maxX
+        } else if (this.totalDisplacementX < -this.maxX+this.xOffSet) {
+          this.totalDisplacementX = -this.maxX+this.xOffSet
           mapBox.style.transition = "800ms ease all"
         }
-        if (this.totalDisplacementY > this.maxY) {
-          this.totalDisplacementY = this.maxY
+        if (this.totalDisplacementY > this.maxY+this.yOffSet) {
+          this.totalDisplacementY = this.maxY+this.yOffSet
           mapBox.style.transition = "800ms ease all"
-        } else if (this.totalDisplacementY < -this.maxY) {
-          this.totalDisplacementY = -this.maxY
+        } else if (this.totalDisplacementY < -this.maxY+this.yOffSet) {
+          this.totalDisplacementY = -this.maxY+this.yOffSet
           mapBox.style.transition = "800ms ease all"
         }
         var xPos = -1.5*window.innerWidth/100 - this.totalDisplacementX
@@ -172,15 +174,19 @@ export default {
         var xPos = -1.5*window.innerWidth/100 - (this.totalDisplacementX + this.curMoveX)
         var yPos = -4.95*window.innerHeight/100 - (this.totalDisplacementY + this.curMoveY)
         var pushbackScale = 10
-        if (this.curMoveX + this.totalDisplacementX > this.maxX) {
-          xPos = -1.5*window.innerWidth/100 - (this.maxX + pushbackScale*Math.sqrt(this.totalDisplacementX + this.curMoveX-this.maxX))
-        } else if (this.curMoveX + this.totalDisplacementX < -this.maxX) {
-          xPos = -1.5*window.innerWidth/100 + (this.maxX + pushbackScale*Math.sqrt(-this.totalDisplacementX - this.curMoveX-this.maxX))
+        // Too far right
+        if (this.curMoveX + this.totalDisplacementX > this.maxX+this.xOffSet) {
+          xPos = -1.5*window.innerWidth/100 - (this.maxX+this.xOffSet + pushbackScale*Math.sqrt(this.totalDisplacementX + this.curMoveX-this.maxX-this.xOffSet))
+        // Too far left
+        } else if (this.curMoveX + this.totalDisplacementX < -this.maxX+this.xOffSet) {
+          xPos = -1.5*window.innerWidth/100 + (this.maxX-this.xOffSet + pushbackScale*Math.sqrt(-this.totalDisplacementX - this.curMoveX-this.maxX+this.xOffSet))
         }
-        if (this.curMoveY + this.totalDisplacementY > this.maxY) {
-          var yPos = -4.95*window.innerHeight/100 - (this.maxY + pushbackScale*Math.sqrt(this.totalDisplacementY + this.curMoveY-this.maxY))
-        } else if (this.curMoveY + this.totalDisplacementY < -this.maxY) {
-          var yPos = -4.95*window.innerHeight/100 + (this.maxY + pushbackScale*Math.sqrt(-this.totalDisplacementY - this.curMoveY-this.maxY))
+        // Too far down
+        if (this.curMoveY + this.totalDisplacementY > this.maxY+this.yOffSet) {
+          var yPos = -4.95*window.innerHeight/100 - (this.maxY+this.yOffSet + pushbackScale*Math.sqrt(this.totalDisplacementY + this.curMoveY-this.maxY-this.yOffSet))
+          // Too far up
+        } else if (this.curMoveY + this.totalDisplacementY < -this.maxY+this.yOffSet) {
+          var yPos = -4.95*window.innerHeight/100 + (this.maxY-this.yOffSet + pushbackScale*Math.sqrt(-this.totalDisplacementY - this.curMoveY-this.maxY+this.yOffSet))
         }
         mapBox.style.transition = "0ms ease all"
         mapBox.style.transform = `scale(${1*this.zoom/40}) translate(${xPos}px, ${yPos}px)`
@@ -207,8 +213,10 @@ export default {
         // abs is absolute position on map
         var adjustedX = this.mouseX - window.innerWidth/2;
         var adjustedY = this.mouseY - window.innerHeight/2;
-        var absX = adjustedX/this.zoom*40 + this.totalDisplacementX;
-        var absY = adjustedY/this.zoom*40 + this.totalDisplacementY;
+        console.log(adjustedX, adjustedY)
+        var absX = adjustedX/this.zoom*40 + this.totalDisplacementX - this.xOffSet/this.zoom*40;
+        var absY = adjustedY/this.zoom*40 + this.totalDisplacementY - this.yOffSet/this.zoom*40;
+        console.log(absX, absY)
         let tempZoom=0;
         if (portraitMode) {
           tempZoom = y/50+this.zoom+dirwheel*10;
@@ -227,8 +235,8 @@ export default {
           // UB
           if (this.zoom >= 75) this.zoom = 75;
         }
-        this.totalDisplacementX = absX - adjustedX/this.zoom*40;
-        this.totalDisplacementY = absY - adjustedY/this.zoom*40;
+        this.totalDisplacementX = absX - (adjustedX)/this.zoom*40 + this.xOffSet;
+        this.totalDisplacementY = absY - (adjustedY)/this.zoom*40 + this.yOffSet;
         mapBox.style.transition = "800ms ease all"
         this.moveInBounds();
       }
@@ -239,7 +247,6 @@ export default {
       this.curMoveX = 0
       this.curMoveY = 0
       this.clicked = true
-      console.log("bing")
     },
     // Make the name tag pop up
     nameTagAppear(b) {
