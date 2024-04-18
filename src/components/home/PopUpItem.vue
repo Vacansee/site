@@ -55,7 +55,7 @@ import tinycolor from "tinycolor2"
                         <b>Overview</b><br><br>
                         <span>Capacity: ~{{ getRoom().meta.max }}&emsp;&emsp;</span>
                         <span v-if="!getPrinters()">Printers: none</span>
-                        <p v-if="getRoom().meta.cur[0] == 'Unavailable'">Reservation ends in 
+                        <p v-if="getRoom().meta.cur[0] == 'Unavailable/Padding'">Reservation ends in 
                             <b>{{ getCur().hours() }}h</b> and
                             <b>{{ getCur().minutes() }}m</b>
                             <span v-if="getSecs('cur') > 0"> for section{{ (getSecs('cur') > 1) ? 's ' : ' ' }}</span>
@@ -73,8 +73,8 @@ import tinycolor from "tinycolor2"
                         <b>Time Slots<br /><br /></b>
                         <div class="time-slots">
                             <button v-for="timeSlot in getTodaysClasses()" :key="timeSlot[1]" class="time-slot"
-                                :class="{ unavailable: timeSlot[0] === 'Unavailable' }"
-                                @click=" timeSlot[0] === 'Available' && openLink(timeSlot[2])"
+                                :class="{ unavailable: timeSlot[0] === 'Unavailable/Padding' }"
+                                @click=" timeSlot[0] === 'Available' && openLink(global.room)"
                                 :disabled="timeSlot[0] !== 'Available'">
                                 {{ timeSlot[1] }}
                             </button>
@@ -317,16 +317,16 @@ export default {
             let roomData = this.getRoom()
             let isReservation = false;
             for (let time in roomData) {
-                if (roomData[time][0] == 'Unavailable' || roomData[time][0] == 'Available') { isReservation = true }
+                if (roomData[time][0] == 'Unavailable/Padding' || roomData[time][0] == 'Available') { isReservation = true }
                 else { break }
             }
             return isReservation
         },
-        openLink() {
-            let roomName = this.getRoom().meta.name
+        openLink(roomName) {
+            console.log(roomName)
             let baseUrl = 'https://cal.lib.rpi.edu/space/'
-            if (roomName == '353a') { baseUrl += '161973' }
-            else if (roomName == '353b') { baseUrl += '161974' }
+            if (roomName == '353A') { baseUrl += '161973' }
+            else if (roomName == '353B') { baseUrl += '161974' }
             else if (roomName == '431') { baseUrl += '161979' }
             else if (roomName == '438') { baseUrl += '161978' }
             else if (roomName == '451') { baseUrl += '161976' }
