@@ -20,7 +20,7 @@ import DiningSurveyLightbox from './DiningSurveyLightbox.vue'
         </RouterLink>
       </div>
 
-      <div id="right-nav">
+      <div id="right-nav" v-show="!isLightboxVisible">
         <a href="#" @click.prevent="openDiningSurvey"><Button class="nav-btn dining" aria-label="Dining" >
             <DiningIcon height="25" width="25"/>
         </Button></a>
@@ -40,7 +40,7 @@ import DiningSurveyLightbox from './DiningSurveyLightbox.vue'
 
   <RouterView />
   
-  <DiningSurveyLightbox ref="diningSurveyLightbox">
+  <DiningSurveyLightbox ref="diningSurveyLightbox" @update:visible="handleLightboxVisibility">
     <!-- Your survey form will go here -->
   </DiningSurveyLightbox>
 
@@ -50,6 +50,7 @@ import DiningSurveyLightbox from './DiningSurveyLightbox.vue'
 export default {
   data() {
     return {
+      isLightboxVisible: false,
       exs: [
         "a building:  Russell Sage",
         "a dept. code:  CSCI 1200",
@@ -82,7 +83,9 @@ export default {
     openDiningSurvey() {
       this.$refs.diningSurveyLightbox.open();
     },
-
+    handleLightboxVisibility(isVisible) {
+      this.isLightboxVisible = isVisible; 
+    },
     changeEx() {
       const ex = this.exs.shift()
       this.ex = `Try ${ex}`; this.exs.push(ex)

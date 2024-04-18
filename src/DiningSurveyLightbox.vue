@@ -76,10 +76,12 @@ export default {
   methods: {
     open() {
       this.visible = true;
+      this.$emit('update:visible', true);
     },
     close() {
       this.visible = false;
       this.activeSubTab = {};
+      this.$emit('update:visible', false);
     },
     handleTabClick(index) {
       this.activeTab = index;
@@ -98,22 +100,23 @@ export default {
 .lightbox-backdrop {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  right: 0; /* Align to the right side */
+  width: 30vw; /* Adjust width to a smaller percentage of the view width */
+  height: 100vh; /* Full height to extend along the right side */
+  background-color: rgba(0, 0, 0, 0); /* Semi-transparent background */
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end; /* Align lightbox to the right */
 }
+
 .lightbox-content {
   background: white;
   padding: 20px;
-  border-radius: 8px;
-  width: 80%; /* Responsive width */
-  max-width: 800px; /* Increased maximum width */
-  text-align: center;
-  overflow: hidden; /* Ensures no overflow */
+  border-radius: 8px 0 0 8px; /* Rounded corners on the left side only */
+  width: 100%; /* Full width of the backdrop */
+  max-width: 300px; /* Maximum width to keep it narrow */
+  height: 100%; /* Full height */
+  overflow-y: auto; /* Allow vertical scrolling if content is too long */
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); /* Shadow on the left edge for depth */
 }
 .tabs {
   display: flex;
