@@ -272,8 +272,8 @@ export default {
     left: unset;
     z-index: 6;
     user-select: none;
+    -webkit-user-select: none;
     transform: translateY(250px);
-    transition: all 1.5s;
     box-sizing: border-box;
     background-color: white;
     border: 3px solid var(--softborder);
@@ -298,7 +298,7 @@ export default {
 }
 
 #fadeout {
-    background-image: linear-gradient(white, transparent);
+    background-image: linear-gradient(white, rgba(255, 255, 255, 0));
     position:relative;
     z-index: 1;
     height: 25px;

@@ -119,6 +119,7 @@ export default {
   },
   methods: {
     moveMap() {
+      console.log(this.global.aspectRatio)
       var popupWidth = popup.style.width;
         if (400 > 0.33 * window.innerWidth) {
           popupWidth = "400px";
@@ -134,18 +135,22 @@ export default {
         */
         if ((this.global.aspectRatio <= this.global.flipScreen) && (this.global.aspectRatio >= 0.5)) {
           floorBox.style.transform = 
-            `translate(calc(${popupWidth} + (${window.innerWidth}px - ${popupWidth}) * 0.45 - 50px), 
-             calc(45vh)) scale(calc(${window.innerHeight * 0.9 / 50 + this.zoom}))` + `rotate(90deg)`;
-        } else if (this.global.aspectRatio <= this.global.flipScreen) { 
+          `translate(calc(${popupWidth} + (${window.innerWidth}px - ${popupWidth}) * 0.45 - 550px), 
+      calc(60vh - 500px)) scale(calc(${window.innerHeight * 0.9 / 50 + this.zoom}))` + `rotate(90deg)`;
+      // If wide landscape
+        } else if (this.global.aspectRatio <= this.global.flipScreen) {
           floorBox.style.transform = 
-              `translate(calc(67vw - 25px), calc(45vh)) scale(${(window.innerWidth) * 0.57 / 50 + this.zoom})`;
+          `translate(calc(60vw - 450px), calc(55vh - 450px)) 
+          scale(${(window.innerWidth) * 0.57 / 50 + this.zoom})`;
+      // If portrait wide mode
         } else if (this.global.aspectRatio <= 1.85) {
           floorBox.style.transform = 
-            `translate(calc(50vw - 25px), calc((${window.innerHeight}px - ${popup.style.height}) / 2)) 
-             scale(${window.innerWidth * 0.9 / 50 + this.zoom})`;
+          `translate(calc(45vw - 515px), calc((${window.innerHeight}px - ${popup.style.height}) / 2 - 400px)) 
+          scale(${window.innerWidth * 0.9 / 50 + this.zoom})`;
+      // If potrait tall mode
         } else {
           floorBox.style.transform = 
-            `translate(calc(45vw - 25px), calc(25vh - 25px)) scale(calc(${window.innerHeight * 0.45 / 50 + this.zoom}))` + `rotate(90deg)`;
+          `translate(calc(45vw - 525px), calc(20vh - 375px)) scale(calc(${window.innerHeight * 0.45 / 50 + this.zoom}))` + `rotate(90deg)`;
         }
     },
 

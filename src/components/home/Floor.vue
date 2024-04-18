@@ -184,7 +184,8 @@ export default {
   stroke-width: 9px;
   will-change: transform;
   transition: width linear 2s, height linear 2s, opacity .8s;
-  width: 50px;
+  width: 1080px;
+  transform: scale(0.04629629629);
   background: none;
   pointer-events: none;
 }
