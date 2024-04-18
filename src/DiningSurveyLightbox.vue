@@ -15,19 +15,19 @@
           <h3>{{ option.name }}</h3>
           <div v-if="option.subOptions" class="scrollable-content">
             <div v-for="(sub, subKey) in option.subOptions" :key="subKey"
-                 :class="{ 'sub-tab': true, 'active': activeSubTab[option.name] === subKey }"
-                 @click.stop="handleSubTabClick(option.name, subKey)">
+                :class="{ 'sub-tab': true, 'active': activeSubTab[option.name] === subKey }"
+                @click.stop="handleSubTabClick(option.name, subKey)">
               <h4>{{ subKey }}</h4>
-              <p v-show="activeSubTab[option.name] === subKey">Hours: {{ sub.times.join(', ') }}</p>
+              <p v-show="activeSubTab[option.name] === subKey">Hours: {{ formatTimes(sub.times).join(', ') }}</p>
               <a v-show="activeSubTab[option.name] === subKey"
-                 :href="sub.url.includes('http') ? sub.url : `https://${sub.url}`" 
-                 target="_blank" rel="noopener noreferrer">More details</a>
+                :href="sub.url.includes('http') ? sub.url : `https://${sub.url}`"
+                target="_blank" rel="noopener noreferrer">More details</a>
             </div>
           </div>
           <div v-else>
-            <p>Hours: {{ option.times.join(', ') }}</p>
+            <p>Hours: {{ formatTimes(option.times).join(', ') }}</p>
             <a :href="option.url.includes('http') ? option.url : `https://${option.url}`"
-               target="_blank" rel="noopener noreferrer" class="details-link">More details</a>
+              target="_blank" rel="noopener noreferrer" class="details-link">More details</a>
           </div>
         </div>
       </div>
@@ -88,6 +88,20 @@ export default {
     handleSubTabClick(parentName, subKey) {
       this.activeSubTab[parentName] = this.activeSubTab[parentName] === subKey ? null : subKey;
     },
+    formatTime24to12(time) {
+      const [hours, minutes] = time.split(':');
+      const hour = parseInt(hours, 10);
+      const suffix = hour >= 12 ? 'PM' : 'AM';
+      const adjustedHour = hour % 12 || 12; // converts "00" to "12" and handles 12 noon/midnight correctly
+      return `${adjustedHour}:${minutes} ${suffix}`;
+    },
+
+    formatTimes(times) {
+      return times.map(time => {
+        const [start, end] = time.split('-');
+        return `${this.formatTime24to12(start)} - ${this.formatTime24to12(end)}`;
+      });
+    }
   },
 };
 </script>
@@ -109,7 +123,7 @@ export default {
   padding: 20px;
   border-radius: 8px 0 0 8px; 
   width: 100%; 
-  max-width: 400px; 
+  max-width: 370px; 
   height: 100%; 
   overflow-y: auto; 
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); 
@@ -146,11 +160,11 @@ export default {
 
 .tab-content {
   margin-top: 5px;
-  flex-grow: 1; /* Take up all available space */
+  flex-grow: 1; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Center content vertically */
+  justify-content: center;
   text-align: center;
   width: 100%;
 }
@@ -162,6 +176,7 @@ export default {
 
 .tab.student-union.active + .tab-content {
   padding-top: -5px; 
+  margin-top: -5px;
 }
 
 .close-button {
