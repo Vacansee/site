@@ -130,7 +130,7 @@ export default {
       // If wide landscape
         } else if (this.global.aspectRatio <= this.global.flipScreen) {
           floorBox.style.transform = 
-          `translate(calc(60vw - 450px), calc(60vh - 450px)) 
+          `translate(calc(60vw - 450px), calc(55vh - 450px)) 
           scale(${(window.innerWidth) * 0.57 / 50 + this.zoom})`;
       // If portrait wide mode
         } else if (this.global.aspectRatio <= 1.85) {
