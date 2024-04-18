@@ -1,7 +1,7 @@
-<svg version="1.1" id="svg1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3140 1177">
+<svg version="1.1" id="svg1" xmlns="http://www.w3.org/2000/svg" viewBox="-150 -150 3440 1477">
   <path d="M3140 0v1177H0V0Z" id="floor"/>
-  <path d="M3140 682v495h-457V835h47V682Z" id="_204"/>
   <path d="M2554 682v153h123v342h-275V682Z" id="_203"/>
+  <path d="M3140 682v495h-457V835h47V682Z" id="_204"/>
   <path d="M2399 869v308h-296V883h108v-14z" id="_202"/>
   <path d="M2101 682v495h-395V682Z" id="_201"/>
   <path d="M1434 682v495h-395V682Z" id="_212"/>

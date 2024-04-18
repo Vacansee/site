@@ -21,11 +21,15 @@ Now with the correct pdf open, we want to work towards an end goal of a floorpla
 
 In order to scale the pdf or end svg, you will need to:
 1. Go to `File` -> `Document Properties`. Press the chain looking icon next to the width/height to lock the scale to evenly enlargen it. Then increase the width dimension to the appropriate size to scale the document (note: this scales the document and not the contents of the document --> onto step 2)
+
 ![](.embed/create-basic-floor-plans-1.png)
+
 2. Press `Ctrl-A` to select all svg elements, then with the cursor tool, hold `Ctrl`, grab the bottom right arrow, and scale evenly to the bottom right of the document size. You may want to play around with positioning of your contents in the document frame, as it seems a bit of empty space is good for displaying the svg in the app (otherwise a part of the svg may be cut off --> you will need to test out your svg in the app after completion and it may need some tweaking). A DCC floorplan silhouette example is shown below to help gauge spacing.
+
 ![](.embed/create-basic-floor-plans-2.png)
 
 Here's an example of the DCC floorplan silhouette with a white background for the document (note: the floor and rooms are both black so they blend in with each other; the colors in the previous photo do not match what the colors mean in this photo, and the outer floor that is in white and the background that is transparent in the previous photo are black and white respectively in this image):
+
 ![](.embed/create-basic-floor-plans-3.png)
 
 ## 3. Trace inner rooms and outer floor
@@ -52,34 +56,13 @@ Some rooms don't have numbers but are essential in the foundation of the buildin
 Tracing the outer floor is the VERY LAST step in the process of creating a floorplan after tracing all the inner rooms. To create the outer floor, you want to follow the path of the outermost inner rooms (tracing along their outer edge) while keeping in mind the shape of the building. Make sure to rename the `id` tag to `floor` and try to capture the parts of the floor that have valid rooms in them (eg. some parts of a floor can be left out if they dont connect rooms).
 
 Here's the first pittsburgh floor as an example next to the pdf floorplan from quacs. Notice how the outer floor encompasses all of the inner rooms but does not add extra gaps or walkways outside of the building, except for the defining arch of the building at the top for the lounge. The key to capturing the best outer floor and floorplan as a whole is to capture the essence of the building while making it neat and simple (definitely easier said then done, but look at other svgs along with their actual quacs floorplan for inspiration!).
+
 ![](.embed/create-basic-floor-plans-8.png)
 ![](.embed/create-basic-floor-plans-9.png)
 
 Lastly, make sure to open the XML Editor again and delete every attribute from each of the paths except for `id` and `d` (this gets rid of the coloring and extra attributes).
 
-After you have created the rooms you will see that some of the shapes are wacky looking and the spacing might be bigger than it should be. So change the shapes slightly to make it look more nice/clean when it gets put on the website as smoothness looks a lot better than weird accuracy. 
-![](.embed/create-basic-floor-plans-14.png)
-![](.embed/create-basic-floor-plans-15.png)
-
-
-## 4. Resize the SVG 
-
-You would think that you are done at this point but not yet, this floorplan will currently work, however it is a lot smaller than other floorplans on the website and that makes the line width on the edges look a lot bigger than they should be. To fix this we need to increase the size of all of the rooms that we just created, here is how we do this.
-
-First we want to center the drawing, to do this go into document properties.
-![](.embed/create-basic-floor-plans-16.png)
-
-Then resize to fit the current size of your svg. This will adjust the entire canvas to just hold your objects.
-![](.embed/create-basic-floor-plans-17.png)
-
-Next we want to increase the size, the best way to do this is to click on the lock width/height button next to the width and height and then add 1000~ units to the width to to make it bigger, press enter and then it should scale both the width and height by that amount.
-![](.embed/create-basic-floor-plans-18.png)
-
-Then select all your objects and while pressing control (to keep width/height ratio) increase the size to try to match the new size, then resize again to fit it correctly and then you are done with this step.  
-![](.embed/create-basic-floor-plans-19.png)
-
-
-## 5. Export SVG and Clean it up
+## 4. Export SVG and Clean it up
 Once finished with the floor plan, make sure to delete the first layer with the pdf to leave the paths we created. Right click on the layer with our paths, click `Convert to group`, then right click again and click `Ungroup` to get rid of the outer shell and leave just our paths.
 
 Then, press `Shift + Ctrl + E` or `File -> Export`, make sure it is exported as an SVG, and rename it as `abbrev#` where the abbreviation is established in `data\convert.py`. Before clicking `Export`, make sure your size/scale is correct (see `Step 2: Open the image` for more info).
