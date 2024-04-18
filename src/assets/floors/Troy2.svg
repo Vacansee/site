@@ -1,0 +1,14 @@
+<svg version="1.1" viewBox="-110 -330 1937.9 1240.9" xmlns="http://www.w3.org/2000/svg">
+  <path id="floor" d="M-50 46h464v-245h207l140-1h456V46h471v695H-50Z"/>
+  <path d="M515 41V-96h112V41Z" id="_excavated_LAVX"/>
+  <path d="M761-200h116v93H761Z" id="_2003"/>
+  <path d="M882-200h335V-3L882-1z" id="_excavated_stair1"/>
+  <path d="M511 41h-97v-234h213v95H511Z" id="_excavated_LAVM"/>
+  <path d="M1252 46h436v695h-436z" id="_2018"/>
+  <path d="M1106 646v-44l79-80h60v124z" id="_2017"/>
+  <path d="M1108 143v44l80 81 57-1V143Z" id="_2020"/>
+  <path d="M1099 611H986l-95-21-77-60-41-88v-98l41-85 77-61 95-20h113v11l84 84h62v241h-63l-83 83z" id="_2015"/>
+  <path d="M548 412V154h79v258z" id="_excavated_stair2"/>
+  <path d="M-50 46h677v103h-86v263H400v141h141v188l-91-1-53 1H-50V363z" id="_2012"/>
+  <path d="M761-101h116V0H761Z" id="_excavated_ele"/>
+</svg>

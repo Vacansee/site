@@ -1,12 +1,12 @@
 <svg version="1.1"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1974 1177.8">
     <path  d="M95 225h1877v778H95z" id="floor"/>
     <!-- <path  d="M257 778H95v225h162z" id="_excavated_stair"/> -->
-    <path  d="M268 1003v-69h7v-17h-7V801h95V686h-95V493h565l1 38h95v472z" id="_214"/>
+    <path  d="M268 1003v-69V801h95V686h-95V493h565l1 38h95v472z" id="_214"/>
     <path  d="M936 531h61l1-38h274v38h62v472H936z" id="_215"/>
-    <path  d="M1679 1003h293V531h-293z" id="_217"/>
     <path  d="M1340 531h62v-38h177v38h94v472h-333z" id="_216"/>
-    <path  d="M1972 521h-218v-86h218z" id="_218"/>
-    <path  d="M1972 424h-218v-60h-13v-34h231z" id="_219"/>
+    <path  d="M1972 530h-218v-86h218z" id="_218"/>
+    <path  d="M1972 441h-218v-60h-13v-34h231z" id="_219"/>
+    <path  d="M1679 1003h293V531h-293z" id="_217"/>
     <path  d="M1673 394h-154V225h154z" id="_211"/>
     <path  d="M1377 393V225h142v169z" id="_210"/>
     <path  d="M1371 394h-132V225h132z" id="_209"/>
