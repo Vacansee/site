@@ -3,6 +3,7 @@
 import MapItem from '../components/home/MapItem.vue'
 import PopUpItem from '../components/home/PopUpItem.vue'
 import FloorItem from '../components/home/FloorItem.vue'
+import router from '../router/index.js'
 </script>
 
 <template>
@@ -74,7 +75,7 @@ export default {
     }
   },
   mounted() {
-    // addEventListeners allow the file to call a function when 
+    // addEventListeners allow the file to call a function when
     // an action occurs
     window.addEventListener("mousemove", (window) => {
       this.mouseX = window.clientX;
@@ -243,6 +244,7 @@ export default {
     },
     // On deselection of a building (when clicked off)
     buildingDeselect() {
+      router.push({ name: 'home' })
       try {
         this.buildingSelected = false
         this.bldgSVG = ""

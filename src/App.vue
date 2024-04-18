@@ -9,6 +9,8 @@ import AutoComplete from 'primevue/autocomplete'
 import Button from "primevue/button"
 import Toast from 'primevue/toast'
 import DiningSurveyLightbox from './DiningSurveyLightbox.vue'
+import MapItem from '../src/components/home/MapItem.vue';
+import router from "@/router";
 </script>
 
 <template>
@@ -47,6 +49,7 @@ import DiningSurveyLightbox from './DiningSurveyLightbox.vue'
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -68,10 +71,21 @@ export default {
       handler() {
         this.$clearToasts()
         // Only shows header when a building is not selected
-        if (this.global.bldg)
-          document.getElementById("header").style.opacity = "0";
-        else
-          document.getElementById("header").style.opacity = "1";
+        if (this.global.bldg) {
+          document.getElementById("header").style.opacity = "0"
+        }
+        else {
+          document.getElementById("header").style.opacity = "1"
+        }
+      }
+    },
+    'global.invalidLoadMessage' : {
+      handler() {
+        // Tells the user when they entered an invalid URL path
+        if (this.global.invalidLoadMessage !== "") {
+          this.$showToast({type: 'info', title: 'Invalid URL', body: this.global.invalidLoadMessage, lasts: 3000})
+          this.global.invalidLoadMessage = ""
+        }
       }
     }
   },
