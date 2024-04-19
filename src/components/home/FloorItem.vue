@@ -77,24 +77,27 @@ export default {
     // When floor num changes
     'global.floor': {
       handler() {
-        // console.log(this.global.floor)
-        // Highest floor: limit
-        if (this.getBldg() && this.global.floor == this.getBldg().meta.floors[0])
+        // Disable Up Arrow if on the Highest floor
+        if (this.getBldg() && this.global.floor == this.getBldg().meta.floors[0]){
           this.btnUp = false 
-        else if (this.global.floor) this.btnUp = true
-        //  Lowest floor: limit
-        if (this.global.floor == 1) this.btnDown = false
-        else if (this.global.floor) this.btnDown = true
+        } else if (this.global.floor) {
+          this.btnUp = true
+        } 
+
+        // Disable Up Arrow if on the Lowest floor
+        if (this.global.floor == 1) {
+          this.btnDown = false;
+        } else if (this.global.floor) {
+          this.btnDown = true
+        }
       }
     },
-    // When button up changes
-    btnUp(newVar) {
-      if (newVar) up.style.opacity = 1;
+    btnUp(turnedOn) {
+      if (turnedOn) up.style.opacity = 1;
       else        up.style.opacity = 0.6;
     },
-    // When button down changes
-    btnDown(newVar) {
-      if (newVar) down.style.opacity = 1;
+    btnDown(turnedOn) {
+      if (turnedOn) down.style.opacity = 1;
       else        down.style.opacity = 0.6;
     },
   },
@@ -116,32 +119,41 @@ export default {
   },
   methods: {
     moveMap() {
+      console.log(this.global.aspectRatio)
       var popupWidth = popup.style.width;
         if (400 > 0.33 * window.innerWidth) {
           popupWidth = "400px";
         }
-        // If thinner landscape mode
-        if ((this.global.aspectRatio <= this.global.flipScreen)
-        && (this.global.aspectRatio >= 0.5)) {
+
+        /* 
+            Might be a good idea to make a method for this
+            if thinner landscape mode 
+            else if wide landscape
+            else if portrait wide mode
+            else if portrait tall mode
+            else
+        */
+        if ((this.global.aspectRatio <= this.global.flipScreen) && (this.global.aspectRatio >= 0.5)) {
           floorBox.style.transform = 
-          `translate(calc(${popupWidth} + (${window.innerWidth}px - ${popupWidth}) * 0.45 - 50px), 
-      calc(45vh)) scale(calc(${window.innerHeight * 0.9 / 50 + this.zoom}))` + `rotate(90deg)`;
+          `translate(calc(${popupWidth} + (${window.innerWidth}px - ${popupWidth}) * 0.45 - 550px), 
+      calc(60vh - 500px)) scale(calc(${window.innerHeight * 0.9 / 50 + this.zoom}))` + `rotate(90deg)`;
       // If wide landscape
         } else if (this.global.aspectRatio <= this.global.flipScreen) {
           floorBox.style.transform = 
-          `translate(calc(67vw - 25px), calc(45vh)) 
+          `translate(calc(60vw - 450px), calc(55vh - 450px)) 
           scale(${(window.innerWidth) * 0.57 / 50 + this.zoom})`;
       // If portrait wide mode
         } else if (this.global.aspectRatio <= 1.85) {
           floorBox.style.transform = 
-          `translate(calc(50vw - 25px), calc((${window.innerHeight}px - ${popup.style.height}) / 2)) 
+          `translate(calc(45vw - 515px), calc((${window.innerHeight}px - ${popup.style.height}) / 2 - 400px)) 
           scale(${window.innerWidth * 0.9 / 50 + this.zoom})`;
       // If potrait tall mode
         } else {
           floorBox.style.transform = 
-          `translate(calc(45vw - 25px), calc(25vh - 25px)) scale(calc(${window.innerHeight * 0.45 / 50 + this.zoom}))` + `rotate(90deg)`;
+          `translate(calc(45vw - 525px), calc(20vh - 375px)) scale(calc(${window.innerHeight * 0.45 / 50 + this.zoom}))` + `rotate(90deg)`;
         }
     },
+
     //clientX and Y will be used to scroll about mouse
     onMouseScroll({clientX, clientY, deltaX, deltaY}) {
       if (!this.onPopup && this.global.bldg){

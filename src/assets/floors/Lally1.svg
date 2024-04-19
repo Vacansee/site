@@ -1,5 +1,6 @@
-<svg version="1.1" id="svg1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 816">
-  <path d="M48 199v384h414v58h135v-58h414V199H48Z" id="floor"/>
-  <path d="M49 199v384h406V271h32v-72H49Z" id="_104"/>
-  <path d="M572 199v72h32v86h16v68h-15v157h406V199H572Z" id="_102"/>
+<svg version="1.1" id="svg1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 2146.7 1093.5">
+  <path d="M2 0v774h837v117h273V778h837V0Z" id="floor" />
+  <path d="M2 0v776h821V146h64V0Z" id="_104" />
+  <path d="M1059 0v149h65v627h821V0Z" id="_102" />
+  <path d="M931 777V553h85v223Z" id="_unexcavated_stair" />
 </svg>

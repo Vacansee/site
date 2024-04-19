@@ -1,0 +1,25 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 -750 2000 3000">
+    <path d="m367 1269-311-1V720h68V300h109l-5-7-6-8-4-8-4-9-3-9-3-9-2-9-1-11v-10l1-12 2-12 5-15 6-13 9-16 8-8 8-9 11-9 14-8 14-6 15-5 16-2h19l14 2 16 4 20 9 18 12V94h942l1 335h413v291h71v550h-327v112H368z" id="floor"/>
+    <path d="M668 847h623v124h-59v-53H668z" id="_unexcavated2"/>
+    <path d="M681 1112h588v125h-59v-53H681z" id="_unexcavated1"/>
+    <path d="M1757 720h-143v115h-89l-116-181-41 20-21-21v-52h-263v52H977v-52H766v52h-65l2-1v-51H561L433 725l-1-88 41-40-1-81h543V297H557V94h787v335h413z" id="_unexcavated3"/>
+    <path d="M270 407h-79V303h79z" id="_unexcavated_ELE"/>
+    <path d="M378 796h12l8 1h7l18-1 20-2 21-3 25-6 23-6 28-10 16-6 15-7 22-11 20-12 16-11 12-9 13-11 12-10 10-9 8-9 9-10 10-12v-51H561L433 725h-54z" id="BAKERY"/>
+    <path d="M766 601h137v52H766z" id="PACIFICA"/>
+    <path d="M1084 601h263v52h-263z" id="CHEFS TABLE"/>
+    <path d="M612 1113h67v123h-67z" id="PIZZA"/>
+    <path d="M681 1185h526v52H681z" id="SAUTE"/>
+    <path d="M56 1000h311v268H56z" id="UCOOK"/>
+    <path d="m1409 653 116 182h-54l-103-161z" id="SIMPLE SERVINGS"/>
+    <path d="M608 792h683v52H608z" id="SALAD"/>
+    <path d="M608 847h56v125h-56z" id="SOUP"/>
+    <path d="M668 919h562l1 53H668z" id="DELI"/>
+    <path d="M612 1057h658v52H612z" id="GRILL"/>
+    <path d="M906 601h71v52h-71z" id="POWER PLANT"/>
+    <path d="M433 725H261V516h210l1 81-40 40z" id="MYCOOK"/>
+    <path d="M557 447V299h201v96h-8v29l-23 23z" id="_unexcavated_LAVW"/>
+    <path d="M429 433H262v82h167z" id="_unexcavated_stair"/>
+    <path d="M1014 514V299H820v215z" id="_unexcavated_LAVM"/>
+    
+</svg>

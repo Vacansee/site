@@ -2,6 +2,7 @@
 // Basic imports
 import moment from 'moment-timezone'
 import tinycolor from "tinycolor2";
+import router from '../../router';
 </script>
 
 <template>
@@ -11,6 +12,7 @@ import tinycolor from "tinycolor2";
 </template>
   
 <script>
+
 const getFloorSVG = async (floorName) => {
   try {
     const module = await import(`../../assets/floors/${floorName}.svg`)
@@ -50,8 +52,8 @@ export default {
         }
         else {
           this.floorSVG = await getFloorSVG(floorName)
-          if (!this.floorSVG) this.$showToast({title: 'Map not yet implemented!'})
-        }
+          router.push({ name: 'buildingAndFloor', params: { building: this.global.bldg, floor: this.global.floor } })
+          if (!this.floorSVG) {this.$showToast({title: 'Map not yet implemented!'})}}
       },
       immediate: true,
     },
@@ -93,6 +95,7 @@ export default {
         const clonedPath = path.cloneNode(true);
         path.parentNode.appendChild(clonedPath);
         this.roomSVG = clonedPath;
+        router.push({ name: 'buildingAndRoom', params: { room: this.global.room } })
         setTimeout(() => {
           clonedPath.setAttribute("id", "selected");
           let border = tinycolor(path.getAttribute("fill")).darken(30).toString();
@@ -103,6 +106,7 @@ export default {
         if (this.roomSVG != null) this.roomSVG.remove()
         this.roomSVG = null
         this.global.room = ""
+        router.push({ name: 'buildingAndFloor', params: { floor: this.global.floor }})
       }
     },
     getColorVal(name) {
@@ -134,7 +138,7 @@ export default {
             path.addEventListener("mouseleave", () => { this.$emit('room-hover', ['', false])  } )
           }
           if (roomInfo) {
-            if (roomInfo.meta.cur) {
+            if (roomInfo.meta.cur && roomInfo.meta.cur[0] != 'Available') { // if room is "available" it will be colored as a free room) {
               path.setAttribute("fill", "#fc4e58");
               path.style.stroke = tinycolor("#fc4e58").darken(20).toString()
               path.setAttribute("cursor", "pointer")
@@ -180,7 +184,8 @@ export default {
   stroke-width: 9px;
   will-change: transform;
   transition: width linear 2s, height linear 2s, opacity .8s;
-  width: 50px;
+  width: 1080px;
+  transform: scale(0.04629629629);
   background: none;
   pointer-events: none;
 }

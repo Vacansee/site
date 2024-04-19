@@ -1,43 +1,48 @@
 <script setup>
 import moment from 'moment-timezone'
 import { average } from 'color.js'
+import router from '../../router';
 import Tag from 'primevue/tag';
 
 import InfoIcon from '@/assets/icons/info.svg?component'
+import CopyIcon from '@/assets/icons/copy.svg?component'
+import tinycolor from "tinycolor2"
 </script>
 
 <template>
     <!-- HTML for the popup -->
     <div id="popup">
+        <CopyIcon id="copy" @click="copyURL"/>
         <div id="breadcrumbs">
             {{ global.bldg.replace(/_/g, ' ') }}
-            <span v-if="global.bldg"> > Floor {{ global.floor }}</span>
-            <span v-if="!noneSelected()"> > Room {{ global.room }}</span>
+            <span v-if="global.bldg"> <span id="slash">/</span> Floor {{ global.floor }}</span>
+            <span v-if="!noneSelected()"> <span id="slash"> /</span> Room {{ global.room }}</span>
         </div>
+        <div id="fadeout"></div>
         <div v-if="global.bldg && getBldg()" class="body">
             <div class="block">
-                <div id="photoBox">
-                    <!-- <img :src="'src/assets/photos/' + global.bldg + '.jpg'" id="photo"> -->
-                    <img :src="imgPath" id="photo">
+                <img :src="imgPath" id="photo">
+                <div id="img-fadeout"></div>
+                <div id="title">
                     <span>{{ getBldg().meta.name }}</span>
                 </div>
-                <p id="heat" v-if="interpretHeat()"><b style="color:var(--heatColor);">{{ interpretHeat() }}</b> (~{{ getBldg().meta.heat.toFixed(2)*100 }}%)</p>
-                <p id="heat" v-else><b>N/A</b></p>
-                <p id="flow" v-if="interpretFlow()">+ {{ interpretFlow() }} (~{{ getBldg().meta.flow.toFixed(2)*100 }}%)&emsp;</p>
-                <p id="time" ref="mySpan">{{ getRealTime(global.time) }}</p>
-                <span v-if="getHist()"> 
-                    <InfoIcon class="info"/>
-                    <a :href="'https://archives.rpi.edu/institute-history/building-histories/' + getHist()">
-                        <em> Get historical info&emsp;</em>
+                    <a v-if="getHist()" :href="'https://archives.rpi.edu/institute-history/building-histories/' + getHist()">
+                        <InfoIcon id="info"/>
                     </a>
-                </span>
-                <Tag value="Tag placeholder" rounded></Tag> <!-- Placeholder for the tag -->
+                <div id="stats">
+                    <span id="heat" v-if="interpretHeat()"><b style="color:var(--heatColor);">{{ interpretHeat() }}</b>
+                    <span> (~{{ Math.trunc(getBldg().meta.heat.toFixed(2)*100) }}%)</span></span>
+                    <span id="heat" v-else><b>N/A</b></span>
+                    <span id="flow" v-if="interpretFlow()"> &emsp;+ 👣 <span v-if="!compact">{{ interpretFlow() }}</span>
+                    &emsp; </span>
+                    <span id="hours" v-if="getAccess()"> &emsp;{{ getAccess()[0] + " - " + getAccess()[1] }}</span>
+                    <span v-if="!getAccess()"> &emsp; 🔒 <span v-if="!compact">locked</span></span>
+                </div>
             </div>
             <div v-if="getDining()" class="block"> <!-- Block: dining -->
                 <b>Dining&emsp;</b>
-                <InfoIcon class="info"/>
                 <a :href="'https://rpi.sodexomyway.com/dining-near-me/' + getDining().url">
-                    <em> More info</em>
+                    <InfoIcon class="i"/>
                 </a>
                 <p v-for="d in parseDiners()"> &emsp;{{ d }}: </p>
                 <p>Test</p>
@@ -45,34 +50,69 @@ import InfoIcon from '@/assets/icons/info.svg?component'
             <div v-if="noneSelected()" class="block warn">No room selected</div>
             <div v-else-if="noData()" class="block warn">No classes in room</div>
             <div v-else> <!-- Room w/ data selected -->
-                <div class="block"> <!-- Block #1: room information -->
-                    <b>Overview</b><br><br>
-                    <span>Capacity: ~{{ getRoom().meta.max }}&emsp;&emsp;</span>
-                    <span v-if="!getPrinters()">Printers: none</span>
-                    <p v-if="getRoom().meta.cur"><b>{{ getRoom().meta.cur[0] }}</b> ends in
-                        <b>{{ getCur().hours() }}h</b> and
-                        <b>{{ getCur().minutes() }}m</b>
-                        <span v-if="getSecs('cur')>0"> for section{{(getSecs('cur') > 1) ? 's ':' '}}</span>
-                        <span v-for="item in getRoom().meta.cur[1]" class="sec">{{ item }}</span>
-                    </p>
-                    <p v-else>No class in session</p>
-                    <p v-if="getRoom().meta.next">Next class (<b>{{ getRoom().meta.next[0] }}</b>) starts in
-                        <b>{{ getNext().hours() }}h</b> and
-                        <b>{{ getNext().minutes() }}m</b>
-                        <span v-if="getSecs('next')>0"> for section{{(getSecs('next') > 1) ? 's ':' '}}</span>
-                        <span v-for="item in getRoom().meta.next[1]" class="sec">{{ item }}</span>
-                    </p>
-                    <p v-else class="warn"> No more classes this week</p>
+                <div v-if="isReservationRoom()"> <!-- reservation room-->
+                    <div class="block"> <!-- Block #1: room information -->
+                        <b>Overview</b><br><br>
+                        <span>Capacity: ~{{ getRoom().meta.max }}&emsp;&emsp;</span>
+                        <span v-if="!getPrinters()">Printers: none</span>
+                        <p v-if="getRoom().meta.cur[0] == 'Unavailable/Padding'">Reservation ends in 
+                            <b>{{ getCur().hours() }}h</b> and
+                            <b>{{ getCur().minutes() }}m</b>
+                            <span v-if="getSecs('cur') > 0"> for section{{ (getSecs('cur') > 1) ? 's ' : ' ' }}</span>
+                            <span v-for="item in getRoom().meta.cur[1]" class="sec">{{ item }}</span>
+                        </p>
+                        <p v-else>No reservation in session</p>
+                        <p v-if="getNextUnavailableReservation()">Next reservation starts in
+                            <b>{{ getNextUnavailableReservation().hours() }}h</b> and
+                            <b>{{ getNextUnavailableReservation().minutes() }}m</b>
+                        </p>
+                        <p v-else class="warn"> No more reservations today</p>
+                    </div>
+
+                    <div class="block reservation-block"> <!-- Block #2: Reservation Time Slots-->
+                        <b>Time Slots<br /><br /></b>
+                        <div class="time-slots">
+                            <button v-for="timeSlot in getNextReservations()" :key="timeSlot[1]" class="time-slot"
+                                :class="{ unavailable: timeSlot[0] === 'Unavailable/Padding' }"
+                                @click=" timeSlot[0] === 'Available' && openLink(global.room)"
+                                :disabled="timeSlot[0] !== 'Available'">
+                                {{ getRealTime(timeSlot[1]) }}
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
-                <div v-if="getTodaysClasses().length" class="block"> <!-- Block: today's room schedule -->
-                    <b>Today</b>
-                    <table>
-                        <tr v-for="item in getTodaysClasses()">
-                            {{ item[0] }}
-                            <td>{{ item[1] }}</td>
-                        </tr>
-                    </table>
+                <div v-else> <!-- normal room -->
+                    <div class="block"> <!-- Block #1: room information -->
+                        <b>Overview</b><br><br>
+                        <span>👤 Capacity: ~{{ getRoom().meta.max }}&emsp;&emsp;</span>
+                        <span v-if="!getPrinters()">&emsp;&emsp;🖨️ Printers: none</span>
+                        <p v-if="getRoom().meta.cur"><b>{{ getRoom().meta.cur[0] }}</b> ends in
+                            <b>{{ getCur().hours() }}h</b> and
+                            <b>{{ getCur().minutes() }}m</b>
+                            <span v-if="getSecs('cur') > 0"> for section{{ (getSecs('cur') > 1) ? 's ' : ' ' }}</span>
+                            <span v-for="item in getRoom().meta.cur[1].map(Number)" class="sec">{{ item }}</span>
+                        </p>
+                        <p v-else>No class in session</p>
+                        <p v-if="getRoom().meta.next">Next class (<b>{{ getRoom().meta.next[0] }}</b>) starts in
+                            <b>{{ getNext().hours() }}h</b> and
+                            <b>{{ getNext().minutes() }}m</b>
+                            <span v-if="getSecs('next') > 0"> for section{{ (getSecs('next') > 1) ? 's ' : ' ' }}</span>
+                            <span v-for="item in getRoom().meta.next[1].map(Number)" class="sec">{{ item }}</span>
+                        </p>
+                        <p v-else class="warn"> No more classes this week</p>
+                    </div>
+                    <div v-if="getTodaysClasses().length" class="block"> <!-- Block: today's room schedule -->
+                        <b>Today</b>
+                        <table>
+                            <tr v-for="item in getTodaysClasses()">
+                                {{ item[0] }}
+                                <td>{{ item[1] }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
+
                 <div v-if="getPrinters()" class="block"> <!-- Block: printers -->
                     <b>Printer{{ getPrinters().length > 1 ? 's' : '' }}</b>
                     <div v-for="p in getPrinters()" style="line-height: 0.5;">
@@ -93,7 +133,7 @@ export default {
     // Gets reference to global
     inject: ['global'],
     data() {
-        return { imgPath: "" }
+        return { imgPath: "", compact: false }
     },
     watch: {
         'global.aspectRatio': {
@@ -105,6 +145,7 @@ export default {
                     popup.style.left = "unset"
                     popup.style.borderRadius = "0 15px 15px 0"
                     buttonBox.style.bottom = "3vw"
+                    this.compact = (this.global.aspectRatio >= .75) ? true : false
                 } else { // If portrait mode
                     popup.style.height = "50vh"
                     popup.style.width = "100vw"
@@ -112,6 +153,7 @@ export default {
                     popup.style.borderRadius = "15px 15px 0 0"
                     if (window.innerWidth > 800) buttonBox.style.bottom = "3vw"
                     else buttonBox.style.bottom = "52vh"
+                    this.compact = (this.global.aspectRatio >= 2.4) ? true : false
                 }
             }
         },
@@ -119,14 +161,33 @@ export default {
             handler() {
                 if (this.global.bldg) {
                     this.imgPath = new URL(`../../assets/photos/${this.global.bldg}.jpg`, import.meta.url).href
+                    const img = new Image()
+                    img.src = this.imgPath
+
+                img.onload = () => {
+                    // Observe image's top-left 50x50 px:
+                    const canvas = document.createElement('canvas')
+                    const ctx = canvas.getContext('2d')
+                    canvas.width = 50; canvas.height = 50
+                    ctx.drawImage(img, 0, 0, 50, 50, 0, 0, 50, 50)
+
+                    const cropPath = canvas.toDataURL()
+
+                    average(cropPath, { format: 'hex' })
+                        .then(color => {
+                            let lum = tinycolor(color).getLuminance()
+                            console.log("luminance", lum)
+                            info.style.fill = ( lum > 0.3) ? '#000000aa' : '#ffffffdd'
+                        })
                     average(this.imgPath, { format: 'hex' })
-                    .then(color => { 
-                        photoBox.style.backgroundColor = `${color}20`
-                        photoBox.style.outlineColor = `${color}40`
-                    })
+                        .then(color => {
+                            title.style.color = color
+                            photo.style.borderColor = `${color}80`
+                        })
+                    }
                 }
-            }
-        }
+            },
+        },
     },
     mounted() {
         if (this.global.aspectRatio <= this.global.flipScreen) {
@@ -169,10 +230,41 @@ export default {
             const i = moment(this.global.time, 'e:HHmm'), f = this.getRoom().meta.next[2]
             return moment.duration(f.diff(i))
         },
+        getAccess() { // Returns whether building is open/closed
+            if (!this.getBldg().meta.hasOwnProperty("open")) return false
+            else return this.getBldg().meta.open
+        },
+        // Returns all next reservations
+        getNextReservations() {
+            let nextSlots = []
+            let roomData = this.getRoom()
+            let proceed  = false
+            for (let time in roomData) {
+                if (time.split(':')[0] == this.global.time.split(':')[0])
+                    if (this.getRealTime(this.getRoom().meta.next[2]) == this.getRealTime(time)) { 
+                        proceed = true; 
+                    }
+                    if (proceed) {
+                        nextSlots.push([roomData[time][0], time])
+                    }
+            }
+            return nextSlots
+        },
+        // Returns the next unavailable reservation (for reservation rooms) 
+        getNextUnavailableReservation() {
+            let nextSlots = this.getNextReservations()
+            for (let timeSlot in nextSlots) {
+                if (nextSlots[timeSlot][0] == 'Unavailable/Padding') {
+                    const i = moment(this.global.time, 'e:HHmm'), f = moment(nextSlots[timeSlot][1], 'e:HHmm')
+                    return moment.duration(f.diff(i))
+                } 
+            } 
+            return false
+        },
         // Returns all data for the current room
         getRoom() { return this.getBldg()[this.global.room] },
         // Gets the current time
-        getRealTime(date) { return moment(date, 'e:HHmm').tz('America/New_York').format('h:mm A') },
+        getRealTime(date) {  return moment(date, 'e:HHmm').format('h:mm A') },
         // Returns the printers in a building
         getPrinters() {
             if (!this.getRoom().meta.hasOwnProperty("printers")) return false
@@ -213,7 +305,7 @@ export default {
         interpretFlow() {
             let flow = this.getBldg().meta.flow
             if (flow > .8) return 'heavy foot traffic'
-            else if (flow > .5) return 'foot traffic'
+            else if (flow > .5) return 'heavy foot traffic'
             else if (flow > .2) return 'some foot traffic'
             else return false
         },
@@ -221,6 +313,30 @@ export default {
             let hist = this.getBldg().meta.hist
             if (hist === "") hist = this.getBldg().meta.name.toLowerCase().replace(/ /g, "-")
             return hist // for case: false
+        },
+        copyURL() {
+          navigator.clipboard.writeText(window.location.href)
+          this.$showToast({type: 'info', title: 'Link to location copied', lasts: 1000})
+        },
+        isReservationRoom() { // checks if a room only supports reservations (only classes are "Available" or "Unavailable")
+            let roomData = this.getRoom()
+            let isReservation = false;
+            for (let time in roomData) {
+                if (roomData[time][0] == 'Unavailable/Padding' || roomData[time][0] == 'Available') { isReservation = true }
+                else { break }
+            }
+            return isReservation
+        },
+        openLink(roomName) {
+            console.log(roomName)
+            let baseUrl = 'https://cal.lib.rpi.edu/space/'
+            if (roomName == '353A') { baseUrl += '161973' }
+            else if (roomName == '353B') { baseUrl += '161974' }
+            else if (roomName == '431') { baseUrl += '161979' }
+            else if (roomName == '438') { baseUrl += '161978' }
+            else if (roomName == '451') { baseUrl += '161976' }
+            else if (roomName == '458') { baseUrl += '161982' }
+            window.open(baseUrl, '_blank')
         }
     }
 }
@@ -238,59 +354,84 @@ export default {
     left: unset;
     z-index: 6;
     user-select: none;
+    -webkit-user-select: none;
     transform: translateY(250px);
-    transition: all 1.5s;
     box-sizing: border-box;
     background-color: white;
     border: 3px solid var(--softborder);
     border-bottom-style: none;
     box-shadow: 0px -2px 40px rgba(0, 0, 0, 0.20);
+    background-color: var(--soft-bg);
     border-radius: 15px 15px 0 0;
+}
+
+#breadcrumbs {
+    padding: 10px 0px 0px 20px;
+    font-size: x-large;
+    font-weight: 600;
+    height: 45px;
+    border-radius: 12px 12px 0 0;
+    background-color: white;
+}
+
+#slash {
+    font-weight: 500;
+    color: #000000a0;
+}
+
+#fadeout {
+    background-image: linear-gradient(white, rgba(255, 255, 255, 0));
+    position:relative;
+    z-index: 1;
+    height: 25px;
+}
+
+#img-fadeout {
+    background-image:
+        linear-gradient(185deg, transparent 20%, white 55%, white),
+        linear-gradient(182deg, transparent 30%, white 60%, white);
+
+    position: absolute;
+    height: 160px;
+    width:  97%;
+    bottom: 0px;
+}
+
+.body {
+    position: absolute;
+    top: 45px;
+    height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
     scrollbar-color: var(--hardborder) transparent;
     scroll-snap-stop: always;
 }
 
-#breadcrumbs {
-    padding: 10px 0px 0px 20px;
-    color: rgb(0, 0, 0);
-    font-weight: 600;
-    font-size: x-large;
-}
-
 #photo {
     width: 100%;
     border-radius: 9px 9px 0 0;
-    display: flex;
+    position: relative;
+    border: 2px solid var(--softborder);
 }
 
-#photoBox {
-    max-width: 80%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+
+#title {
     line-height: 2.5;
-    outline: 3px solid;
-    border-radius: 10px;
+    font-weight: 500;
+    left: 1.2rem;
+    text-shadow: white 4px -2px 20px;
+    font-size: x-large;
+    position: absolute;
+    bottom: 14%;
+
 }
 
 #heat {
     font-size: larger;
-    line-height: 0;
-    padding-bottom: .5rem;
-    text-align: center;
 }
 
 #flow {
-    line-height: 0;
-    text-align: center;
-}
-
-#time {
-    text-align: center;
-    color: var(--hardborder);
+    color: #000000aa;
 }
 
 table, td {
@@ -319,9 +460,9 @@ tr:nth-child(even) {
 }
 
 .sec {
-    font-family: monospace;
-    padding: 4px 5px 1px 5px;
-    margin: 0 5px 0 0;
+    font-size: small;
+    padding: 2px 6px 2px 6px;
+    margin-right: 6px;
     background-color: var(--roomfill);
     border-radius: 30%;
 }
@@ -333,18 +474,96 @@ tr:nth-child(even) {
     border-radius: 10px;
     border: 1px solid var(--softborder);
     box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    position: relative;
 }
 
-.info {
-    fill: #1e3050;
-    margin: 0 4px -4px 0;
+#stats {
+    position: absolute;
+    vertical-align: middle;
+    bottom: 7%;
+    left: 1.2rem;
+}
+
+#hours {
+    font-size: smaller
+}
+
+.i {
+    position: absolute;
+    fill: #000000aa;
     height: 20px;
-    width: 20px;
+}
+
+#info {
+    fill: var(--buildfill);
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    height: 25px;
+}
+
+#copy {
+    fill: black;
+    width: 28px;
+    z-index: 2;
+    position: absolute;
+    top: 12px;
+    right: 22px;
+    transition: all 0.2s;
+}
+
+#copy:hover {
+    fill: #000000b0;
+}
+
+.reservation-block .time-slots {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+}
+
+.reservation-block .time-slot {
+    /* Available slot color */
+    background-color: #7eff96;
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.reservation-block .time-slot.unavailable {
+    /* Unavailable slot color */
+    background-color: #ff5757;
+    border-radius: 10px;
+}
+
+.reservation-block .time-slots {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+}
+
+.reservation-block .time-slot {
+    /* Available slot color */
+    background-color: #7eff96;
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.reservation-block .time-slot.unavailable {
+    /* Unavailable slot color */
+    background-color: #ff5757;
+    border-radius: 10px;
 }
 
 li {
     line-height: 1.5;
 }
 
-
 </style>
+ 
