@@ -50,34 +50,69 @@ import tinycolor from "tinycolor2"
             <div v-if="noneSelected()" class="block warn">No room selected</div>
             <div v-else-if="noData()" class="block warn">No classes in room</div>
             <div v-else> <!-- Room w/ data selected -->
-                <div class="block"> <!-- Block #1: room information -->
-                    <b>Overview</b><br><br>
-                    <span>👤 Capacity: ~{{ getRoom().meta.max }}&emsp;&emsp;</span>
-                    <span v-if="!getPrinters()">&emsp;&emsp;🖨️ Printers: none</span>
-                    <p v-if="getRoom().meta.cur"><b>{{ getRoom().meta.cur[0] }}</b> ends in
-                        <b>{{ getCur().hours() }}h</b> and
-                        <b>{{ getCur().minutes() }}m</b>
-                        <span v-if="getSecs('cur')>0"> for section{{(getSecs('cur') > 1) ? 's ':' '}}</span>
-                        <span v-for="item in getRoom().meta.cur[1].map(Number)" class="sec">{{ item }}</span>
-                    </p>
-                    <p v-else>No class in session</p>
-                    <p v-if="getRoom().meta.next">Next class (<b>{{ getRoom().meta.next[0] }}</b>) starts in
-                        <b>{{ getNext().hours() }}h</b> and
-                        <b>{{ getNext().minutes() }}m</b>
-                        <span v-if="getSecs('next')>0"> for section{{(getSecs('next') > 1) ? 's ':' '}}</span>
-                        <span v-for="item in getRoom().meta.next[1].map(Number)" class="sec">{{ item }}</span>
-                    </p>
-                    <p v-else class="warn"> No more classes this week</p>
+                <div v-if="isReservationRoom()"> <!-- reservation room-->
+                    <div class="block"> <!-- Block #1: room information -->
+                        <b>Overview</b><br><br>
+                        <span>Capacity: ~{{ getRoom().meta.max }}&emsp;&emsp;</span>
+                        <span v-if="!getPrinters()">Printers: none</span>
+                        <p v-if="getRoom().meta.cur[0] == 'Unavailable/Padding'">Reservation ends in 
+                            <b>{{ getCur().hours() }}h</b> and
+                            <b>{{ getCur().minutes() }}m</b>
+                            <span v-if="getSecs('cur') > 0"> for section{{ (getSecs('cur') > 1) ? 's ' : ' ' }}</span>
+                            <span v-for="item in getRoom().meta.cur[1]" class="sec">{{ item }}</span>
+                        </p>
+                        <p v-else>No reservation in session</p>
+                        <p v-if="getNextUnavailableReservation()">Next reservation starts in
+                            <b>{{ getNextUnavailableReservation().hours() }}h</b> and
+                            <b>{{ getNextUnavailableReservation().minutes() }}m</b>
+                        </p>
+                        <p v-else class="warn"> No more reservations today</p>
+                    </div>
+
+                    <div class="block reservation-block"> <!-- Block #2: Reservation Time Slots-->
+                        <b>Time Slots<br /><br /></b>
+                        <div class="time-slots">
+                            <button v-for="timeSlot in getNextReservations()" :key="timeSlot[1]" class="time-slot"
+                                :class="{ unavailable: timeSlot[0] === 'Unavailable/Padding' }"
+                                @click=" timeSlot[0] === 'Available' && openLink(global.room)"
+                                :disabled="timeSlot[0] !== 'Available'">
+                                {{ getRealTime(timeSlot[1]) }}
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
-                <div v-if="getTodaysClasses().length" class="block"> <!-- Block: today's room schedule -->
-                    <b>Today</b>
-                    <table>
-                        <tr v-for="item in getTodaysClasses()">
-                            {{ item[0] }}
-                            <td>{{ item[1] }}</td>
-                        </tr>
-                    </table>
+                <div v-else> <!-- normal room -->
+                    <div class="block"> <!-- Block #1: room information -->
+                        <b>Overview</b><br><br>
+                        <span>👤 Capacity: ~{{ getRoom().meta.max }}&emsp;&emsp;</span>
+                        <span v-if="!getPrinters()">&emsp;&emsp;🖨️ Printers: none</span>
+                        <p v-if="getRoom().meta.cur"><b>{{ getRoom().meta.cur[0] }}</b> ends in
+                            <b>{{ getCur().hours() }}h</b> and
+                            <b>{{ getCur().minutes() }}m</b>
+                            <span v-if="getSecs('cur') > 0"> for section{{ (getSecs('cur') > 1) ? 's ' : ' ' }}</span>
+                            <span v-for="item in getRoom().meta.cur[1].map(Number)" class="sec">{{ item }}</span>
+                        </p>
+                        <p v-else>No class in session</p>
+                        <p v-if="getRoom().meta.next">Next class (<b>{{ getRoom().meta.next[0] }}</b>) starts in
+                            <b>{{ getNext().hours() }}h</b> and
+                            <b>{{ getNext().minutes() }}m</b>
+                            <span v-if="getSecs('next') > 0"> for section{{ (getSecs('next') > 1) ? 's ' : ' ' }}</span>
+                            <span v-for="item in getRoom().meta.next[1].map(Number)" class="sec">{{ item }}</span>
+                        </p>
+                        <p v-else class="warn"> No more classes this week</p>
+                    </div>
+                    <div v-if="getTodaysClasses().length" class="block"> <!-- Block: today's room schedule -->
+                        <b>Today</b>
+                        <table>
+                            <tr v-for="item in getTodaysClasses()">
+                                {{ item[0] }}
+                                <td>{{ item[1] }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
+
                 <div v-if="getPrinters()" class="block"> <!-- Block: printers -->
                     <b>Printer{{ getPrinters().length > 1 ? 's' : '' }}</b>
                     <div v-for="p in getPrinters()" style="line-height: 0.5;">
@@ -199,6 +234,33 @@ export default {
             if (!this.getBldg().meta.hasOwnProperty("open")) return false
             else return this.getBldg().meta.open
         },
+        // Returns all next reservations
+        getNextReservations() {
+            let nextSlots = []
+            let roomData = this.getRoom()
+            let proceed  = false
+            for (let time in roomData) {
+                if (time.split(':')[0] == this.global.time.split(':')[0])
+                    if (this.getRealTime(this.getRoom().meta.next[2]) == this.getRealTime(time)) { 
+                        proceed = true; 
+                    }
+                    if (proceed) {
+                        nextSlots.push([roomData[time][0], time])
+                    }
+            }
+            return nextSlots
+        },
+        // Returns the next unavailable reservation (for reservation rooms) 
+        getNextUnavailableReservation() {
+            let nextSlots = this.getNextReservations()
+            for (let timeSlot in nextSlots) {
+                if (nextSlots[timeSlot][0] == 'Unavailable/Padding') {
+                    const i = moment(this.global.time, 'e:HHmm'), f = moment(nextSlots[timeSlot][1], 'e:HHmm')
+                    return moment.duration(f.diff(i))
+                } 
+            } 
+            return false
+        },
         // Returns all data for the current room
         getRoom() { return this.getBldg()[this.global.room] },
         // Gets the current time
@@ -255,6 +317,26 @@ export default {
         copyURL() {
           navigator.clipboard.writeText(window.location.href)
           this.$showToast({type: 'info', title: 'Link to location copied', lasts: 1000})
+        },
+        isReservationRoom() { // checks if a room only supports reservations (only classes are "Available" or "Unavailable")
+            let roomData = this.getRoom()
+            let isReservation = false;
+            for (let time in roomData) {
+                if (roomData[time][0] == 'Unavailable/Padding' || roomData[time][0] == 'Available') { isReservation = true }
+                else { break }
+            }
+            return isReservation
+        },
+        openLink(roomName) {
+            console.log(roomName)
+            let baseUrl = 'https://cal.lib.rpi.edu/space/'
+            if (roomName == '353A') { baseUrl += '161973' }
+            else if (roomName == '353B') { baseUrl += '161974' }
+            else if (roomName == '431') { baseUrl += '161979' }
+            else if (roomName == '438') { baseUrl += '161978' }
+            else if (roomName == '451') { baseUrl += '161976' }
+            else if (roomName == '458') { baseUrl += '161982' }
+            window.open(baseUrl, '_blank')
         }
     }
 }
@@ -433,6 +515,50 @@ tr:nth-child(even) {
 
 #copy:hover {
     fill: #000000b0;
+}
+
+.reservation-block .time-slots {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+}
+
+.reservation-block .time-slot {
+    /* Available slot color */
+    background-color: #7eff96;
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.reservation-block .time-slot.unavailable {
+    /* Unavailable slot color */
+    background-color: #ff5757;
+    border-radius: 10px;
+}
+
+.reservation-block .time-slots {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+}
+
+.reservation-block .time-slot {
+    /* Available slot color */
+    background-color: #7eff96;
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.reservation-block .time-slot.unavailable {
+    /* Unavailable slot color */
+    background-color: #ff5757;
+    border-radius: 10px;
 }
 
 li {
